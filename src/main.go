@@ -9,6 +9,8 @@ import (
 	"regexp"
 )
 
+var SRV_PATH = "/opt/ahb-files/files/"
+
 type pageData struct {
 	Nav bool
 }
@@ -75,21 +77,21 @@ func handleStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	f, err := os.Stat("./static/" + m[2])
+	f, err := os.Stat(SRV_PATH + "/static/" + m[2])
 	if err != nil || f.IsDir() {
 		http.NotFound(w, r)
 		return
 	}
 
-	http.ServeFile(w, r, "./static/"+m[2])
+	http.ServeFile(w, r, SRV_PATH + "/static/"+m[2])
 }
 
 func dirToJSON(path string) []byte {
 	var filesToJson []string
-	f, err := os.ReadDir("." + path)
+	f, err := os.ReadDir(path)
 
 	if err != nil {
-		log.Printf("Error reading dir: %s", path)
+		log.Printf("Error reading %s: %v", path, err)
 		return []byte("")
 	}
 
@@ -108,11 +110,11 @@ func dirToJSON(path string) []byte {
 
 func buildList() http.HandlerFunc {
 	validPath := regexp.MustCompile("^/static/list/(photos|mfa|venice|portraiture|copies)$")
-	photoJson := dirToJSON("/static/files/portfolio/photo/")
-	mfaJson := dirToJSON("/static/files/portfolio/paint/mfa/")
-	veniceJson := dirToJSON("/static/files/portfolio/paint/venice/")
-	portraitureJson := dirToJSON("/static/files/portfolio/paint/portraiture/")
-	copiesJson := dirToJSON("/static/files/portfolio/paint/copies/")
+	photoJson := dirToJSON(SRV_PATH + "portfolio/photo/") 
+	mfaJson := dirToJSON(SRV_PATH + "portfolio/paint/mfa/")
+	veniceJson := dirToJSON(SRV_PATH + "portfolio/paint/venice/")
+	portraitureJson := dirToJSON(SRV_PATH + "portfolio/paint/portraiture/")
+	copiesJson := dirToJSON(SRV_PATH + "portfolio/paint/copies/")
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
