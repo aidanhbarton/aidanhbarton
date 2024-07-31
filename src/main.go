@@ -77,13 +77,13 @@ func handleStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	f, err := os.Stat(SRV_PATH + "/static/" + m[2])
+	f, err := os.Stat("static/" + m[2])
 	if err != nil || f.IsDir() {
 		http.NotFound(w, r)
 		return
 	}
 
-	http.ServeFile(w, r, SRV_PATH + "/static/"+m[2])
+	http.ServeFile(w, r, "static/"+m[2])
 }
 
 func dirToJSON(path string) []byte {
@@ -96,7 +96,7 @@ func dirToJSON(path string) []byte {
 	}
 
 	for _, file := range f {
-		filesToJson = append(filesToJson, path+file.Name())
+		filesToJson = append(filesToJson, "/"+path+file.Name())
 	}
 
 	filesAsJson, err := json.Marshal(filesToJson)
@@ -110,11 +110,11 @@ func dirToJSON(path string) []byte {
 
 func buildList() http.HandlerFunc {
 	validPath := regexp.MustCompile("^/static/list/(photos|mfa|venice|portraiture|copies)$")
-	photoJson := dirToJSON(SRV_PATH + "portfolio/photo/") 
-	mfaJson := dirToJSON(SRV_PATH + "portfolio/paint/mfa/")
-	veniceJson := dirToJSON(SRV_PATH + "portfolio/paint/venice/")
-	portraitureJson := dirToJSON(SRV_PATH + "portfolio/paint/portraiture/")
-	copiesJson := dirToJSON(SRV_PATH + "portfolio/paint/copies/")
+	photoJson := dirToJSON("static/files/portfolio/photo/") 
+	mfaJson := dirToJSON("static/files/portfolio/paint/mfa/")
+	veniceJson := dirToJSON("static/files/portfolio/paint/venice/")
+	portraitureJson := dirToJSON("static/files/portfolio/paint/portraiture/")
+	copiesJson := dirToJSON("static/files/portfolio/paint/copies/")
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
@@ -151,7 +151,7 @@ func main() {
 
 	http.HandleFunc("/static/list/", buildList())
 
-	port := ":5000"
+	port := ":80"
 	log.Printf("\tServing at 127.0.0.1" + port)
 	http.ListenAndServe(port, nil)
 }
