@@ -13,6 +13,8 @@ type pageData struct {
 	Nav bool
 }
 
+var sitePath string;
+
 func paint(w http.ResponseWriter, r *http.Request, p *pageData) {
 	renderTmpl(w, "paint.html", p)
 }
@@ -75,26 +77,26 @@ func handleStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	f, err := os.Stat("./static/" + m[2])
+	f, err := os.Stat(sitePath+"static/" + m[2])
 	if err != nil || f.IsDir() {
 		http.NotFound(w, r)
 		return
 	}
 
-	http.ServeFile(w, r, "./static/"+m[2])
+	http.ServeFile(w, r, sitePath+"static/"+m[2])
 }
 
 func dirToJSON(path string) []byte {
 	var filesToJson []string
-	f, err := os.ReadDir("." + path)
+	f, err := os.ReadDir(sitePath+path)
 
 	if err != nil {
-		log.Printf("Error reading dir: %s", path)
+		log.Printf("Error reading %s: %v", path, err)
 		return []byte("")
 	}
 
 	for _, file := range f {
-		filesToJson = append(filesToJson, path+file.Name())
+		filesToJson = append(filesToJson, "/"+path+file.Name())
 	}
 
 	filesAsJson, err := json.Marshal(filesToJson)
@@ -108,11 +110,11 @@ func dirToJSON(path string) []byte {
 
 func buildList() http.HandlerFunc {
 	validPath := regexp.MustCompile("^/static/list/(photos|mfa|venice|portraiture|copies)$")
-	photoJson := dirToJSON("/static/files/portfolio/photo/")
-	mfaJson := dirToJSON("/static/files/portfolio/paint/mfa/")
-	veniceJson := dirToJSON("/static/files/portfolio/paint/venice/")
-	portraitureJson := dirToJSON("/static/files/portfolio/paint/portraiture/")
-	copiesJson := dirToJSON("/static/files/portfolio/paint/copies/")
+	photoJson := dirToJSON("static/files/portfolio/photo/") 
+	mfaJson := dirToJSON("static/files/portfolio/paint/mfa/")
+	veniceJson := dirToJSON("static/files/portfolio/paint/venice/")
+	portraitureJson := dirToJSON("static/files/portfolio/paint/portraiture/")
+	copiesJson := dirToJSON("static/files/portfolio/paint/copies/")
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
@@ -139,6 +141,12 @@ func buildList() http.HandlerFunc {
 }
 
 func main() {
+	if len(os.Args) == 1 {
+		log.Printf("No site path given, quitting...")
+		return
+	}
+	sitePath = os.Args[1]
+	log.Printf("Using site path %s", sitePath)
 	http.HandleFunc("/", handlerWrapper(index))
 	http.HandleFunc("/home/", handlerWrapper(home))
 	http.HandleFunc("/about/", handlerWrapper(about))
@@ -149,7 +157,7 @@ func main() {
 
 	http.HandleFunc("/static/list/", buildList())
 
-	port := ":5000"
+	port := ":5050"
 	log.Printf("\tServing at 127.0.0.1" + port)
-	http.ListenAndServe(port, nil)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
