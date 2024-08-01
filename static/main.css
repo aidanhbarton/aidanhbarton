@@ -5,7 +5,7 @@
     --dark-gray: #8c8a85;
     --light-gray: #e5e3dc;
     --yellow: #ffc600;
-    
+
     --unit: 10px;
     --doubled-unit: calc(var(--unit) * 2);
     --font-size: 1.4rem;
@@ -23,18 +23,18 @@ body {
 }
 
 main {
-  position:relative; 
+  position:relative;
   display: block;
   padding-left: var(--display-margin);
   padding-right: var(--display-margin);
   margin-left: 0;
   margin-right: calc(10 * var(--unit));
-  
+
   transition: margin 0.5s cubic-bezier(0.3, 0.2, 0.2, 1);
-  
+
   &.shift-content {
     margin-left: calc(10 * var(--unit));
-    margin-right: 0;  
+    margin-right: 0;
   }
 
   &:has(.page-hsplit) {
@@ -57,26 +57,25 @@ a:hover {
   color: var(--red);
 }
 
-h2 {
-  margin: 0;
+h1,h2,h4 {
+  font-weight: normal;
   display: block;
+  margin: 0;
+}
+
+h2 {
   font-size: calc(2.5 * var(--font-size));
   text-transform: lowercase;
-  font-weight: bold;
   color: var(--red);
 }
 
 h2::before {
   content: '\276F';
-  font-weight: normal;
   font-size: calc(2 * var(--font-size));
   padding-right: var(--unit);
 }
 
 h4 {
-  margin: 0;
-  display: block;
-  font-weight: normal;
   padding-top: var(--unit);
   padding-bottom: var(--unit);
   padding-left: var(--unit);
@@ -96,14 +95,15 @@ footer {
   height: 150px;
   align-content: center;
   border-top: 2px dashed var(--light-gray);
-  margin-top: var(--unit);
+  margin-top: var(--doubled-unit);
 
   & ul {
+    overflow: hidden;
     display: block;
     height: var(--font-size);
     list-style: none;
     width: fit-content;
-    margin: 0;
+    margin: auto;
     padding: 0;
   }
 
@@ -131,8 +131,9 @@ footer {
 }
 
 .copywrite {
+  margin: auto;
+  width: fit-content;
   color: var(--red);
-  font-weight: bold;
 }
 
 .page-header {
@@ -140,7 +141,7 @@ footer {
   justify-content: center;
   display: block;
   align-content: center;
-  margin-bottom: var(--unit);
+  margin-bottom: var(--doubled-unit);
   width: 100%;
   position: relative;
   border-bottom: 2px dashed var(--light-gray);
@@ -160,10 +161,10 @@ footer {
   position: fixed;
   top: 0px;
   left: 0px;
-  
+
   background: var(--red);
   color: var(--white);
-  
+
   transition: color 0.4s cubic-bezier(0.3, 0.2, 0.2, 1.4);
 
   &.opened {
@@ -179,17 +180,17 @@ footer {
       animation: 0.75s cubic-bezier(0.3, 0.2, 0.2, 1.3) 0s 1 arrow-spin;
     }
   }
- 
+
   & .side-bar-content {
     display: flex;
     flex-direction: column;
     overflow: hidden;
     height: 100%;
     width: 0;
-    
+
     font-size: var(--font-size);
     font-weight: normal;
-    
+
     transition: width 0.5s cubic-bezier(0.3, 0.2, 0.2, 1);
 
     & span {
@@ -199,7 +200,7 @@ footer {
       & a {
         position: absolute;
         bottom: var(--display-margin);
-  
+
         &:hover > img {
           content: url('/static/files/signature-red.png');
         }
@@ -213,7 +214,7 @@ footer {
       }
     }
 
-    & nav 
+    & nav
     {
       width: 100%;
       flex-grow: 1;
@@ -234,16 +235,16 @@ footer {
   & .side-bar-control {
     height: 100%;
     width: var(--doubled-unit);
-    padding-left: var(--unit);
-    padding-right: var(--unit);
     cursor: pointer;
     position: relative;
-    transition: padding-left 0.25s cubic-bezier(0.3, 0.5, 0.5, 1.2);
+    padding-left: var(--unit);
+    padding-right: var(--unit);
 
-    & div
-    {
+    & div {
       content: url('/static/files/open.png');
+      display: block;
       width: var(--doubled-unit);
+      height: fit-content;
       position: absolute;
       bottom: var(--display-margin);
     }
@@ -265,12 +266,12 @@ footer {
 
   & #cover-image {
     display: block;
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     position: absolute;
     top: 0;
     left: 0;
-    
+
     background-color: var(--red);
     background-image: url("/static/files/cover.jpg");
     background-size: cover;
@@ -282,8 +283,8 @@ footer {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
 
     & span {
       display: flex;
@@ -291,24 +292,24 @@ footer {
       position: relative;
       height: 100%;
       width: 100%;
-  
+
       & .heading {
         flex: 75%;
-        
+
         & span {
           margin: auto;
           width: fit-content;
-          
+
           & div {
             margin: auto;
           }
         }
 
       }
-      
+
       & .button {
         flex: 25%;
-  
+
         & > ::before {
           content: '\2039';
           opacity: 0;
@@ -322,11 +323,11 @@ footer {
           margin-left: 100px;
           transition: all 0.5s;
         }
-  
+
         &:hover {
           color: var(--red);
           border-color: var(--red);
-  
+
           & > ::before {
             opacity: 1;
             margin-right: var(--unit);
@@ -336,9 +337,9 @@ footer {
             margin-left: var(--unit);
           }
         }
-  
-        & a {    
-          font-weight: bold;
+
+        & a {
+          font-weight: normal;
           font-size: calc(var(--font-size));
         }
       }
@@ -359,8 +360,8 @@ footer {
     flex: 1;
     transition: flex 0.25s ease-in;
     overflow:hidden;
-    border-top: var(--unit) solid var(--white);
-    border-bottom: var(--unit) solid var(--white);
+    border-top: var(--doubled-unit) solid var(--white);
+    border-bottom: var(--doubled-unit) solid var(--white);
     background: var(--red);
   }
 
@@ -377,7 +378,7 @@ footer {
       background-size: cover;
       background-position: center 20%;
     }
-    
+
     &.photo {
       background-image: url("/static/files/portfolio/photo/_7180037.jpg");
       background-size: cover;
@@ -398,7 +399,7 @@ footer {
       height: 100%;
       width: 400px;
       pointer-events: all;
-     
+
       & h1 {
         font-weight: normal;
       }
@@ -406,7 +407,7 @@ footer {
       &:hover > h1 {
         font-weight: bold;
       }
-    
+
       &:hover {
         color: var(--white);
       }
@@ -456,8 +457,8 @@ footer {
       font-weight: bold;
       height: 100%;
       align-content: center;
-      padding-left: var(--unit);
-      padding-right: var(--unit);
+      padding-left: var(--doubled-unit);
+      padding-right: var(--doubled-unit);
       cursor: pointer;
       border: 2px dashed var(--white);
       border-radius: 10px 10px;
@@ -475,7 +476,8 @@ footer {
 
     & .profile-cv {
       position: relative;
-      margin-bottom: var(--unit);
+      margin: 0;
+      margin-bottom: var(--doubled-unit);
       width: calc(100% - var(--doubled-unit));
       height: 100px;
 
@@ -511,13 +513,13 @@ footer {
       top: 48px;
       border: 2px dashed var(--light-gray);
       z-index: 10;
-      padding: var(--unit);
+      padding: var(--doubled-unit);
       border-radius: 0px 10px 0px 10px;
 
       & p {
         margin:0;
       }
-  
+
       & p + p {
         margin-top: var(--doubled-unit);
       }
@@ -534,18 +536,18 @@ footer {
       & .dropdown {
         display: block;
         position: relative;
-        
+
         & span  {
           display: flex;
 
-          &::before {
+          &::after {
             content: '\039E';
             font-family: sans-serif;
             display: inline-flex;
             height:fit-content;
             margin: auto;
-            margin-right: var(--unit);
-            margin-left: 0;
+            margin-left: var(--doubled-unit);
+            margin-right: 0;
             width: var(--doubled-unit);
           }
 
@@ -555,7 +557,7 @@ footer {
             &.selected {
               display: flex;
             }
-            
+
             & h1 {
               float: left;
               margin: auto;
@@ -596,15 +598,15 @@ footer {
         }
 
         &:hover {
-          & > span::before {
+          & > span::after {
             content: '|';
-            color: var(var(--red));
+            color: var(--red);
           }
 
           & > .dropdown-content {
           height: max-content;
           padding: var(--unit);
-          
+
           border: 2px dashed var(--red);
           border-radius: 0 10px 10px 10px;
         }
@@ -616,7 +618,7 @@ footer {
 /* Gallaries */
 .gallery
 {
-  display: flex;  
+  display: flex;
   flex-wrap: wrap;
   width: 100%;
   padding-bottom: var(--unit);
@@ -642,7 +644,6 @@ footer {
           border: var(--unit) solid var(--red);
         }
       }
-    
       & img
       {
         display: block;
@@ -657,8 +658,8 @@ footer {
   display: block;
   flex-direction: row;
   background: var(--white);
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  height: 100dvh;
   visibility: hidden;
 
   z-index: 10;
@@ -680,7 +681,7 @@ footer {
         margin: auto;
       }
     }
-    
+
     & div {
       flex: 5%;
       & a.exit {
@@ -698,23 +699,27 @@ footer {
     --unit: 5px;
     --font-size: 1.2rem;
   }
-  
+
   .hex-stamp {
     transform: translateX(-50%);
     left: 50%;
     top: 25%;
   }
-  
+
   .signature
   {
     width: calc(28 * var(--unit));
   }
-  
+
   main {
-    margin-right: var(--unit);
-    margin-left: var(--unit);
+    margin-right: var(--doubled-unit);
+    margin-left: var(--doubled-unit);
     padding: 0;
-    padding-top: var(--display-margins);
+    padding-top: calc(var(--display-margins));
+
+    &:has(.page-hsplit) {
+        margin-right: var(--doubled-unit);
+    }
   }
 
   /* Sidebar */
@@ -725,22 +730,37 @@ footer {
 
     &.opened {
       & .side-bar-content {
-        height: calc(100vh - var(--display-margins));
+        height: calc(100dvh - var(--display-margins));
         width: 100%;
         border-bottom: 2px dashed var(--dark-gray);
       }
+
+      & .side-bar-control {
+        & div {
+          content: unset;
+          &::after {
+            content: "- - -";
+            color: var(--red);
+          }
+        }
+      }
     }
-  
+
     & .side-bar-content {
       width: 100%;
       height: 0;
-      transition: height 0.75s cubic-bezier(0.3, 0.2, 0.2, 1);
+      transition: height 0.5s cubic-bezier(0.2, 0.75, 0.75, 1);
 
-      & span a {
-        bottom: 50%;
+      & nav {
+        font-size: xx-large;
+      }
 
-        & img {
-          width: 50%;
+      & span {
+        flex: 40%;
+        a {
+          & img {
+            width: 50%;
+          }
         }
       }
     }
@@ -748,31 +768,41 @@ footer {
     & .side-bar-control {
       width: 100%;
       height: var(--display-margins);
+      padding: 0;
 
-      & div
-      {
-        content: url('/static/files/open.png');
-        width: var(--doubled-unit);
-        position: absolute;
-        right: var(--display-margin);
-        transform: rotate(90deg);
-        animation: 1s cubic-bezier(0.3, 0.2, 0.2, 1.3) .5s 1 arrow-spin;
+      & div {
+        all: unset;
+
+        &::after {
+          align-items: center;
+          display: flex;
+          content: '\039E';
+          font-family: sans-serif;
+          font-size: x-large;
+          color: var(--white);
+          margin: auto;
+          position: absolute;
+          right: calc(8*var(--unit));
+          top: 0;
+          bottom: 0;
+        }
       }
-    }
-  }
-
-  @keyframes arrow-spin {
-    0% {
-        transform: rotate(270deg);
-    }
-    100% {
-        transform: rotate(90deg);
     }
   }
 
   /* home */
   .page-hsplit {
-    height: calc(100vh - var(--display-margins));
+    height: calc(100dvh - var(--display-margins));
+
+    & .level-wrapper a:hover > h1 {
+      font-weight: normal;
+    }
+
+    & .level-wrapper:has(a:hover) {
+      flex: 1;
+      border-left: 0;
+      border-right: 0;
+    }
   }
 
   /* About */
@@ -800,23 +830,23 @@ footer {
   }
 
   /* Zoom */
-  .image-zoom {
+.image-zoom {
     .image-zoom-content {
       flex-direction: column;
-      padding: var(--unit);
-      padding-top: calc(var(--unit) + var(--display-margins));    
+      margin: var(--doubled-unit);
+      margin-top: calc(var(--doubled-unit) + var(--display-margins));
       height: 100%;
       width: unset;
 
       & span  {
         flex: 80%;
-  
+
         & img {
           height: unset;
-          width: 100%;
+          width: calc(100% - var(--unit));
         }
       }
-      
+
       & div {
         flex: 20%;
         & a.exit {
