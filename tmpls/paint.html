@@ -1,0 +1,40 @@
+{{ template "header" . }}
+  <div class="page-content" id="paint">
+    <div class="page-header">
+      <h2>painting</h2>
+      <h4>The pursuit of Light</h4>
+    </div>
+
+    <div class="paint-title">
+      <div class="dropdown">
+          <span>
+            <div id="mfa-title" class="selected">
+              <h1>MFA Exhibition</h1>
+              <h4>2024</h4>
+            </div>
+            <div id="venice-title">
+              <h1>Venice</h1>
+              <h4>2023</h4>
+            </div>
+            <div id="portraiture-title">
+              <h1>Portraiture</h1>
+              <h4>2023-2024</h4>
+            </div>
+            <div id="copies-title">
+              <h1>Copies</h1>
+              <h4>2023</h4>
+            </div>
+          </span>
+          <div class="dropdown-content">
+            <a onclick="selectGallery('mfa')">MFA Exhibition</a>
+            <a onclick="selectGallery('venice')">Venice</a>
+            <a onclick="selectGallery('portraiture')">Portraiture</a>
+            <a onclick="selectGallery('copies')">Copies</a>
+          </div>
+      </div>
+    </div>
+    
+    <div class="gallery" id="gallery">
+    </div>
+  </div>
+{{ template "footer" . }}
