@@ -9,11 +9,11 @@ import (
 	"regexp"
 )
 
-var SRV_PATH = "/opt/ahb-files/files/"
-
 type pageData struct {
 	Nav bool
 }
+
+var sitePath string;
 
 func paint(w http.ResponseWriter, r *http.Request, p *pageData) {
 	renderTmpl(w, "paint.html", p)
@@ -77,18 +77,18 @@ func handleStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	f, err := os.Stat("static/" + m[2])
+	f, err := os.Stat(sitePath+"static/" + m[2])
 	if err != nil || f.IsDir() {
 		http.NotFound(w, r)
 		return
 	}
 
-	http.ServeFile(w, r, "static/"+m[2])
+	http.ServeFile(w, r, sitePath+"static/"+m[2])
 }
 
 func dirToJSON(path string) []byte {
 	var filesToJson []string
-	f, err := os.ReadDir(path)
+	f, err := os.ReadDir(sitePath+path)
 
 	if err != nil {
 		log.Printf("Error reading %s: %v", path, err)
@@ -141,6 +141,12 @@ func buildList() http.HandlerFunc {
 }
 
 func main() {
+	if len(os.Args) == 1 {
+		log.Printf("No site path given, quitting...")
+		return
+	}
+	sitePath = os.Args[1]
+	log.Printf("Using site path %s", sitePath)
 	http.HandleFunc("/", handlerWrapper(index))
 	http.HandleFunc("/home/", handlerWrapper(home))
 	http.HandleFunc("/about/", handlerWrapper(about))
@@ -151,7 +157,7 @@ func main() {
 
 	http.HandleFunc("/static/list/", buildList())
 
-	port := ":80"
+	port := ":5050"
 	log.Printf("\tServing at 127.0.0.1" + port)
-	http.ListenAndServe(port, nil)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
