@@ -39,7 +39,7 @@ main {
 
   &:has(.page-hsplit) {
     padding-right: 0;
-    margin-right: var(--unit);
+    margin-right: var(--doubled-unit);
   }
 }
 
@@ -70,7 +70,7 @@ h2 {
 }
 
 h2::before {
-  content: '\276F';
+  content: '>';
   font-size: calc(2 * var(--font-size));
   padding-right: var(--unit);
 }
@@ -120,14 +120,6 @@ footer {
   display: block;
   width: calc(17 * var(--unit));
   content: url('/static/files/signature.png');
-}
-
-.hex-stamp {
-  position: absolute;
-  top: var(--doubled-unit);
-  content: url('/static/files/hex-stamp-red.png');
-  height: 75px;
-  transform: translateX(50%);
 }
 
 .copywrite {
@@ -196,20 +188,15 @@ footer {
     & span {
       flex: 60%;
       position: relative;
+      padding: var(--unit);
 
       & a {
-        position: absolute;
-        bottom: var(--display-margin);
-
-        &:hover > img {
-          content: url('/static/files/signature-red.png');
-        }
-
+        width: 100%;
         & img {
           margin: auto;
           display: block;
           width: 100%;
-          content: url('/static/files/signature-black.png');
+          content: url('/static/files/logo.png');
         }
       }
     }
@@ -676,6 +663,7 @@ footer {
       flex: 95%;
       height: 100%;
       & img {
+        background: var(--red);
         display: block;
         height: 100%;
         margin: auto;
@@ -741,6 +729,7 @@ footer {
           &::after {
             content: "- - -";
             color: var(--red);
+            font-weight: bold;
           }
         }
       }
@@ -757,9 +746,12 @@ footer {
 
       & span {
         flex: 40%;
+
         a {
+            position: absolute;
+            bottom: var(--display-margin);
           & img {
-            width: 50%;
+            width: 30%;
           }
         }
       }
