@@ -85,6 +85,7 @@ h4 {
 
 p {
   font-size: var(--font-size);
+  padding: var(--unit);
 }
 
 img {
@@ -116,10 +117,9 @@ footer {
   }
 }
 
-.signature {
+.logo {
   display: block;
-  width: calc(17 * var(--unit));
-  content: url('/static/files/signature.png');
+  content: url('/static/files/logo.png');
 }
 
 .copywrite {
@@ -196,6 +196,7 @@ footer {
           margin: auto;
           display: block;
           width: 100%;
+          max-width: 96px;
           content: url('/static/files/logo.png');
         }
       }
@@ -284,10 +285,11 @@ footer {
         flex: 75%;
 
         & span {
-          margin: auto;
           width: fit-content;
+          margin: auto;
 
           & div {
+            width: 96px;
             margin: auto;
           }
         }
@@ -742,6 +744,10 @@ footer {
 
       & nav {
         font-size: xx-large;
+        & a:hover {
+          scale: 1;
+          transition: none;
+        }
       }
 
       & span {
@@ -752,6 +758,7 @@ footer {
             bottom: var(--display-margin);
           & img {
             width: 30%;
+            max-width: unset;
           }
         }
       }
