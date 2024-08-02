@@ -23,7 +23,7 @@ const clickImage = function (img) {
 
   window.requestAnimationFrame(() => {
     is_showing.src = img;
-   
+
     // zoom window visibility update
     const zoom_window = document.getElementById("zoomed-image-window");
     if (zoom_window.style.visibility != "visible") {
