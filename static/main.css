@@ -57,26 +57,25 @@ a:hover {
   color: var(--red);
 }
 
-h2 {
-  margin: 0;
+h1,h2,h4 {
+  font-weight: normal;
   display: block;
+  margin: 0;
+}
+
+h2 {
   font-size: calc(2.5 * var(--font-size));
   text-transform: lowercase;
-  font-weight: normal;
   color: var(--red);
 }
 
 h2::before {
   content: '\276F';
-  font-weight: thin;
   font-size: calc(2 * var(--font-size));
   padding-right: var(--unit);
 }
 
 h4 {
-  margin: 0;
-  display: block;
-  font-weight: normal;
   padding-top: var(--unit);
   padding-bottom: var(--unit);
   padding-left: var(--unit);
@@ -96,7 +95,7 @@ footer {
   height: 150px;
   align-content: center;
   border-top: 2px dashed var(--light-gray);
-  margin-top: var(--unit);
+  margin-top: var(--doubled-unit);
 
   & ul {
     overflow: hidden;
@@ -142,7 +141,7 @@ footer {
   justify-content: center;
   display: block;
   align-content: center;
-  margin-bottom: var(--unit);
+  margin-bottom: var(--doubled-unit);
   width: 100%;
   position: relative;
   border-bottom: 2px dashed var(--light-gray);
@@ -478,7 +477,7 @@ footer {
     & .profile-cv {
       position: relative;
       margin: 0;
-      margin-bottom: var(--unit);
+      margin-bottom: var(--doubled-unit);
       width: calc(100% - var(--doubled-unit));
       height: 100px;
 
@@ -716,7 +715,7 @@ footer {
     margin-right: var(--doubled-unit);
     margin-left: var(--doubled-unit);
     padding: 0;
-    padding-top: calc(var(--display-margins) + var(--unit));
+    padding-top: calc(var(--display-margins));
 
     &:has(.page-hsplit) {
         margin-right: var(--doubled-unit);
@@ -750,7 +749,7 @@ footer {
     & .side-bar-content {
       width: 100%;
       height: 0;
-      transition: height 0.75s cubic-bezier(0.3, 0.2, 0.2, 1);
+      transition: height 0.5s cubic-bezier(0.2, 0.75, 0.75, 1);
 
       & nav {
         font-size: xx-large;
@@ -791,21 +790,18 @@ footer {
     }
   }
 
-  @keyframes arrow-spin {
-    0% {
-        transform: rotate(270deg);
-    }
-    100% {
-        transform: rotate(90deg);
-    }
-  }
-
   /* home */
   .page-hsplit {
-    height: calc(100dvh - var(--display-margins) - var(--doubled-unit));
+    height: calc(100dvh - var(--display-margins));
+
+    & .level-wrapper a:hover > h1 {
+      font-weight: normal;
+    }
 
     & .level-wrapper:has(a:hover) {
-        flex: 1;
+      flex: 1;
+      border-left: 0;
+      border-right: 0;
     }
   }
 
