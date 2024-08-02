@@ -4,10 +4,6 @@ const isMobile = window.matchMedia("(max-width: 600px)").matches;
 function toggle_side_bar() {
   const toToggle = document.getElementById("side-bar-toggle");
   toToggle.classList.toggle("opened");
-
-  if (!isMobile) { 
-    document.getElementById('content').classList.toggle('shift-content');
-  }
 }
 // end NavBar
 
@@ -215,7 +211,6 @@ if (document.getElementById('photo')) {
 // Painting page
 } else if (document.getElementById('paint')) {
   document.addEventListener("DOMContentLoaded", (event) => {
-    initilizeGallery('/static/list/mfa');
   });
 }
 
