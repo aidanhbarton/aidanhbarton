@@ -11,28 +11,34 @@ import (
 
 type pageData struct {
 	Nav bool
+  Content string
 }
 
 var sitePath string;
 
 func paint(w http.ResponseWriter, r *http.Request, p *pageData) {
+  p.Content = "The paintings of Aidan H Barton."
 	renderTmpl(w, "paint.html", p)
 }
 
 func photo(w http.ResponseWriter, r *http.Request, p *pageData) {
+  p.Content = "The photography of Aidan H Barton."
 	renderTmpl(w, "photo.html", p)
 }
 
 func about(w http.ResponseWriter, r *http.Request, p *pageData) {
+  p.Content = "Who is Aidan H Barton? Read about his interesting journy here."
 	renderTmpl(w, "about.html", p)
 }
 
 func home(w http.ResponseWriter, r *http.Request, p *pageData) {
+  p.Content = "Read about Aidan, or look at his work."
 	renderTmpl(w, "home.html", p)
 }
 
 func index(w http.ResponseWriter, r *http.Request, p *pageData) {
 	p.Nav = false
+  p.Content = "The personal website of Aidan H Barton. Artist, Engineer, Philosopher."
 	renderTmpl(w, "index.html", p)
 }
 
@@ -67,7 +73,7 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 	}
 }
 
-var validStaticPath = regexp.MustCompile("^(/static/)([a-zA-Z0-9&_/-]+(.css|.js|.png|.jpg|.pdf))$")
+var validStaticPath = regexp.MustCompile("^(/static/)([a-zA-Z0-9&_/-]+(.css|.js|.png|.jpg|.pdf|.ttf))$")
 
 func handleStatic(w http.ResponseWriter, r *http.Request) {
 	log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
