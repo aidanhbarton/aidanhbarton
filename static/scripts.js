@@ -205,7 +205,7 @@ const clearGallery = function() {
 // Photo page
 if (document.getElementById('photo')) {
   document.addEventListener("DOMContentLoaded", (event) => {
-    initilizeGallery('/static/list/photos');
+    initilizeGallery('/list/photos');
   });
 // end photo
 

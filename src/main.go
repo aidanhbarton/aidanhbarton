@@ -146,5 +146,5 @@ func main() {
 
 	port := ":5050"
 	log.Printf("\tServing at 127.0.0.1" + port)
-	log.Fatal(http.ListenAndServeTLS(port,"cert/go-server.crt", "cert/go-server.key", nil))
+	log.Fatal(http.ListenAndServeTLS(port,"cert/fullchain.pem", "cert/privkey.pem", nil))
 }
