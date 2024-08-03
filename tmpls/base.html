@@ -3,16 +3,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta content="width=device-width" name="viewport" />
+    <meta name="description" content="{{ .Content }}">
+    <meta property="og:url" content="https://aidanhbarton.me/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Aidan H Barton">
+    <meta property="og:title" content="Aidan H Barton">
+    <meta property="og:description" content="The personal website of Aidan H Barton. Artist, Engineer, Philosopher.">
+    <meta property="og:image" content="https://aidanhbarton.me/static/files/portfolio/photo/_1270013-2.avif">
+
     <title>Aidan H. Barton</title>
-    <link type="img/png" rel="icon" href="/static/files/favicon.png"/>
+    <link type="image/x-icon" rel="icon" href="/static/files/favicon.png"/>
     <link type="text/css" rel="stylesheet" href="/static/main.css"/>
     <script defer src='/static/scripts.js'></script>
-    <meta name="description" content="{{ .Content }}">
-    <meta property="og:image" content="/static/files/portfolio/photo/_1270013-2.avif">
+
   </head>
   <body>
     {{ if not .Nav }}
-    <main id="content" style="animation: unset;margin: 0;">
+    <main id="content">
     {{ else }}
     <div class="side-bar" id="side-bar-toggle">
       <div class="side-bar-content">
@@ -21,21 +28,15 @@
         </span>
         <nav>
           <a href="/about">about</a>
-          <a href="/paint">paint</a>
           <a href="/photo">photo</a>
+          <a href="/paint">paint</a>
           <a href="/home">home</a>
         </nav>
       </div>
-      <a class="side-bar-control" onclick='toggle_side_bar()'><div></div></a>
+      <div id="side-bar-control"><div></div></div>
     </div>
     <main id="content">
     {{ end }}
-  <div class="image-zoom" id="zoomed-image-window">
-    <div class="image-zoom-content">
-      <span><img class="zoomed-image" id="zoomed-image" src=""></span>
-      <div><a class="exit" onclick="hideZoom()">&#10005;</a></div>
-    </div>
-  </div>
 {{ end }}
 
 {{ define "footer" }}
