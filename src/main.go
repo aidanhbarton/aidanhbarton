@@ -73,28 +73,9 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 	}
 }
 
-var validStaticPath = regexp.MustCompile("^(/static/)(.?[a-zA-Z0-9&_/-]+(.css|.js|.png|.jpg|.avif|.pdf|.ttf|.txt)?)$")
-
-func handleStatic(w http.ResponseWriter, r *http.Request) {
-	log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
-	m := validStaticPath.FindStringSubmatch(r.URL.Path)
-	if m == nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	f, err := os.Stat(sitePath+"static/" + m[2])
-	if err != nil || f.IsDir() {
-		http.NotFound(w, r)
-		return
-	}
-
-	http.ServeFile(w, r, sitePath+"static/"+m[2])
-}
-
 func dirToJSON(path string) []byte {
 	var filesToJson []string
-	f, err := os.ReadDir(sitePath+path)
+	f, err := os.ReadDir(sitePath + "/" + path)
 
 	if err != nil {
 		log.Printf("Error reading %s: %v", path, err)
@@ -102,7 +83,7 @@ func dirToJSON(path string) []byte {
 	}
 
 	for _, file := range f {
-		filesToJson = append(filesToJson, "/"+path+file.Name())
+		filesToJson = append(filesToJson, "/" + path + file.Name())
 	}
 
 	filesAsJson, err := json.Marshal(filesToJson)
@@ -114,8 +95,8 @@ func dirToJSON(path string) []byte {
 	return filesAsJson
 }
 
-func buildList() http.HandlerFunc {
-	validPath := regexp.MustCompile("^/static/list/(photos|mfa|venice|portraiture|copies)$")
+func buildListHandler() http.HandlerFunc {
+	validPath := regexp.MustCompile("^/list/(photos|mfa|venice|portraiture|copies)$")
 	photoJson := dirToJSON("static/files/portfolio/photo/") 
 	mfaJson := dirToJSON("static/files/portfolio/paint/mfa/")
 	veniceJson := dirToJSON("static/files/portfolio/paint/venice/")
@@ -148,20 +129,20 @@ func buildList() http.HandlerFunc {
 
 func main() {
 	if len(os.Args) == 1 {
-		log.Printf("No site path given, quitting...")
+		log.Printf("No web root path given, quitting...")
 		return
 	}
 	sitePath = os.Args[1]
-	log.Printf("Using site path %s", sitePath)
+	log.Printf("Using web root path %s", sitePath)
 	http.HandleFunc("/", handlerWrapper(index))
 	http.HandleFunc("/home/", handlerWrapper(home))
 	http.HandleFunc("/about/", handlerWrapper(about))
 	http.HandleFunc("/photo/", handlerWrapper(photo))
 	http.HandleFunc("/paint/", handlerWrapper(paint))
 
-	http.HandleFunc("/static/", handleStatic)
+	http.Handle("/static/", http.FileServer(http.Dir(".")))
 
-	http.HandleFunc("/static/list/", buildList())
+	http.HandleFunc("/list/", buildListHandler())
 
 	port := ":5050"
 	log.Printf("\tServing at 127.0.0.1" + port)
