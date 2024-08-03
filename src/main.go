@@ -73,7 +73,7 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 	}
 }
 
-var validStaticPath = regexp.MustCompile("^(/static/)([a-zA-Z0-9&_/-]+(.css|.js|.png|.jpg|.pdf|.ttf))$")
+var validStaticPath = regexp.MustCompile("^(/static/)(.?[a-zA-Z0-9&_/-]+(.css|.js|.png|.jpg|.avif|.pdf|.ttf|.txt)?)$")
 
 func handleStatic(w http.ResponseWriter, r *http.Request) {
 	log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
@@ -165,5 +165,5 @@ func main() {
 
 	port := ":5050"
 	log.Printf("\tServing at 127.0.0.1" + port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServeTLS(port,"cert/go-server.crt", "cert/go-server.key", nil))
 }

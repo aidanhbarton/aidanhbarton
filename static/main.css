@@ -2,6 +2,10 @@
   font-family: 'Century Gothic';
   src: url(/static/files/fonts/CenturyGothicPaneuropeanRegular.ttf);
 }
+@font-face {
+  font-family: 'EB Garamond';
+  src: url(/static/files/fonts/EBGaramond-Regular.ttf);
+}
 
 :root {
     --white: #fdfaf0;
@@ -123,6 +127,7 @@ footer {
   display: flex;
   flex-direction: column;
   margin-bottom: var(--doubled-unit);
+  margin-top: var(--doubled-unit);
   width: 100%;
 
   & h2,h4 {
@@ -224,7 +229,7 @@ footer {
     left: 0;
 
     background-color: var(--red);
-    background-image: url("/static/files/cover.jpg");
+    background-image: url("/static/files/cover.avif");
     background-size: cover;
     background-position: center;
   }
@@ -326,13 +331,13 @@ footer {
     pointer-events: none;
 
     &.about {
-      background-image: url("/static/files/portfolio/photo/_6220011.jpg");
+      background-image: url("/static/files/portfolio/photo/_6220011.avif");
       background-size: cover;
       background-position: center 20%;
     }
 
     &.photo {
-      background-image: url("/static/files/portfolio/photo/_7180037.jpg");
+      background-image: url("/static/files/portfolio/photo/_7180037.avif");
       background-size: cover;
       background-position: center 70%;
     }
