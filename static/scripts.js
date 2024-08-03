@@ -97,7 +97,7 @@ const buildImageNode = function(imagePaths) {
   const a = document.createElement("a");
   a.setAttribute("onclick", "clickImage('"+ imagePaths[1] +"')");
   a.appendChild(img);
-    
+
   const image = document.createElement("div")
   image.classList.add("image");
   image.appendChild(a);
@@ -118,7 +118,8 @@ const buildPutImage = function (columns) {
         minIndex = index;
         break;
       }
-      const h = col.lastChild.offsetTop + col.lastChild.offsetHeight;
+      let h = col.lastChild.offsetTop
+      h += col.lastChild.offsetHeight ? col.lastChild.offsetHeight : 380;
       if (h < minHeight) {
         minIndex = index;
         minHeight = h;
