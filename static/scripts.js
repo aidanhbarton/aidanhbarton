@@ -211,7 +211,6 @@ if (document.getElementById('photo')) {
 // Painting page
 } else if (document.getElementById('paint')) {
   document.addEventListener("DOMContentLoaded", (event) => {
-    initilizeGallery('/static/list/mfa');
   });
 }
 
