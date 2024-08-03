@@ -1,5 +1,5 @@
 {{ define "header" }}<!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta content="width=device-width" name="viewport" />
@@ -8,6 +8,8 @@
     <link type="text/css" rel="stylesheet" href="/static/main.css"/>
     <script defer src='/static/scripts.js'></script>
     <link href='https://fonts.googleapis.com/css?family=EB Garamond' rel='stylesheet'>
+    <meta name="description" content="{{ .Content }}">
+    <meta property="og:image" content="https://www.aidanhbarton.me/static/files/portfolio/photo/_1270013-2.jpg">
   </head>
   <body>
     {{ if not .Nav }}

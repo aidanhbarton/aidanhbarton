@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Century Gothic';
+  src: url(/static/files/fonts/CenturyGothicPaneuropeanRegular.ttf);
+}
+
 :root {
     --white: #fdfaf0;
     --black: #36334d;
@@ -46,6 +51,7 @@ a:hover {
 }
 
 h1,h2,h4 {
+  font-family: 'Century Gothic';
   font-weight: normal;
   display: block;
   margin: 0;
