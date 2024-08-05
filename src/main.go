@@ -58,9 +58,20 @@ func renderTmpl(w http.ResponseWriter, tmpl string, p *pageData) {
 	}
 }
 
+func addHeaders(w http.ResponseWriter) {
+    w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubdomains")
+
+    w.Header().Add("Content-Security-Policy", "default-src 'self' https://aidanhbarton.me/; object-src 'none'; form-action 'none'")
+
+    w.Header().Add("X-Frame-Options", "DENY")
+    w.Header().Add("X-Content-Type-Options", "nosniff")
+    w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
+}
+
 func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http.HandlerFunc {
 	validPath := regexp.MustCompile("^/($|(home|about|photo|paint)/?$)")
 	return func(w http.ResponseWriter, r *http.Request) {
+    addHeaders(w)
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 		m := validPath.MatchString(r.URL.Path)
 		if !m {
@@ -104,6 +115,9 @@ func buildListHandler() http.HandlerFunc {
 	copiesJson := dirToJSON("static/files/portfolio/paint/copies/")
 
 	return func(w http.ResponseWriter, r *http.Request) {
+    addHeaders(w)
+    w.Header().Add("Content-Type", "text/plain")
+
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 		m := validPath.FindStringSubmatch(r.URL.Path)
 		if m == nil {

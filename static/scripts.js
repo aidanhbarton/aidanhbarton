@@ -1,63 +1,30 @@
 const isMobile = window.matchMedia("(max-width: 600px)").matches;
+const toggler = (id, nameToToggle) => { document.getElementById(id).classList.toggle(nameToToggle) };
 
-// NavBar
-function toggle_side_bar() {
-  const toToggle = document.getElementById("side-bar-toggle");
-  toToggle.classList.toggle("opened");
+// sideBar
+const sideBarCtrl = document.getElementById('side-bar-control');
+if (sideBarCtrl) {
+  sideBarCtrl.addEventListener('click', (clickEvent) => {toggler('side-bar-toggle', 'opened')});
 }
-// end NavBar
+// end sideBar
 
 // Zoom
-const hideZoom = function () { 
-  document.getElementById("zoomed-image-window").style.visibility = "hidden"; 
+const hideZoom = function () {
+  document.getElementById("zoomed-image-window").classList.remove("show");
 };
 
-const clickImage = function (img) {  
+const clickImage = function (img) {
   // set new img src
   const is_showing = document.getElementById("zoomed-image");
   is_showing.src = "";
-
   window.requestAnimationFrame(() => {
     is_showing.src = img;
-
-    // zoom window visibility update
-    const zoom_window = document.getElementById("zoomed-image-window");
-    if (zoom_window.style.visibility != "visible") {
-    zoom_window.style.visibility = "visible";
-    zoom_window.animate([
-      { transform: "translateY(150px)" },
-      { transform: "translateY(0px)" },
-    ], { duration: 250, iterations: 1});
-    zoom_window.animate([
-      { opacity: "0%" },
-      { opacity: "100%" },
-    ], { duration: 100, iterations: 1});
-    }
+    document.getElementById("zoomed-image-window").classList.add("show");
   });
-} 
-// End Zoom
+};
 
-// About Tabs
-let selected_tab = 'profile'
-function select_tab(tab) {
-  if (!tab) { 
-    return; 
-  }
-  
-  new_tab_element = document.getElementById(tab + "-tab");
-  new_text_element = document.getElementById(tab + "-text");
-  selected_tab_element = document.getElementById(selected_tab + "-tab");
-  selected_text_element = document.getElementById(selected_tab + "-text");
-  
-  if (new_tab_element && new_text_element) {
-    selected_tab_element.classList.remove('selected');
-    new_tab_element.classList.add('selected');
-    selected_text_element.style.display = "none";
-    new_text_element.style.display = "block";
-    selected_tab = tab;    
-  }
-}
-// End About Tabs
+document.getElementById('zoom-exit').addEventListener('click', hideZoom);
+// End Zoom
 
 // Galleries
 let galleryLoading = false;
@@ -78,7 +45,7 @@ const makeColumns = function(id) {
     col.style.flexWidth = '50%';
     col.style.maxWidth = '50%';
   }
-  
+
   document.getElementById("gallery").appendChild(col);
   // Returns an array functions which insert a photo into column 'i'
   return [((image) => {
@@ -94,13 +61,13 @@ const buildImageNode = function(imagePaths) {
   const img = document.createElement("img");
   img.src = imagePaths[0]; // small version
 
-  const a = document.createElement("a");
-  a.setAttribute("onclick", "clickImage('"+ imagePaths[1] +"')");
-  a.appendChild(img);
+  const div = document.createElement("a");
+  div.addEventListener("click", () => { clickImage(imagePaths[1]); });
+  div.appendChild(img);
 
   const image = document.createElement("div")
   image.classList.add("image");
-  image.appendChild(a);
+  image.appendChild(div);
   return image;
 };
 
@@ -161,7 +128,7 @@ const galleryLoader = function(putImage, images) {
     galleryLoading = true;
     if (images.length <= 0) {
       window.onscroll = null;
-    }  
+    }
     populateGallery(putImage, imagesToLoad(24));
   });
 };
@@ -177,7 +144,7 @@ const initilizeGallery = function(endpoint) {
     const putImage = buildPutImage(setupColumns());
     const loader = galleryLoader(putImage, res);
     window.onscroll = function(e) {
-      const wHeight = window.innerHeight + Math.round(window.scrollY);      
+      const wHeight = window.innerHeight + Math.round(window.scrollY);
       if (!(wHeight >= document.body.offsetHeight - 400)) {
         return;
       }
@@ -203,24 +170,26 @@ const clearGallery = function() {
 };
 
 // Photo page
-if (document.getElementById('photo')) {
+if (location.pathname == '/photo/') {
   document.addEventListener("DOMContentLoaded", (event) => {
     initilizeGallery('/list/photos');
   });
 // end photo
 
 // Painting page
-} else if (document.getElementById('paint')) {
+} else if (location.pathname == '/paint/') {
   document.addEventListener("DOMContentLoaded", (event) => {
   });
-}
-
-const selectGallery = function(name) {
-  const selected = document.getElementsByClassName("selected")[0];
-  const newSelected = document.getElementById(name+"-title");
-  selected.classList.toggle("selected");
-  newSelected.classList.toggle("selected");
-  clearGallery();
-  initilizeGallery('/static/list/' + name );
-};
 // end Painting
+
+// About page
+} else if (location.pathname == '/about/') {
+  const clickAboutToggle = function(clickEvent) {
+    if (clickEvent.target.classList.contains('selected')) {return;}
+    toggler('profile', 'selected');
+    toggler('artist-statement', 'selected');
+  };
+  document.getElementById('profile').addEventListener('click', clickAboutToggle);
+  document.getElementById('artist-statement').addEventListener('click', clickAboutToggle);
+}
+// end About

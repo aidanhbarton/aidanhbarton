@@ -40,6 +40,11 @@ main {
   margin-left: 200px;
 }
 
+main:has(#cover) {
+    margin: 0;
+    padding: 0;
+}
+
 a {
   display: block;
   width: fit-content;
@@ -59,23 +64,22 @@ h1,h2,h4 {
   font-weight: normal;
   display: block;
   margin: 0;
+  font-size: x-large;
 }
 
 h2 {
-  font-size: xxx-large;
   text-transform: lowercase;
   color: var(--red);
 }
 
 h2::before {
   content: '>';
-  font-size: xxx-large;
   padding-right: var(--unit);
 }
 
 h4 {
-  font-size: x-large;
   color: var(--black);
+  font-size: large;
 }
 
 p {
@@ -110,6 +114,14 @@ footer {
   & ul li + li {
     padding-left: var(--doubled-unit);
   }
+}
+
+.hidden{
+  display: none !important;
+}
+
+.show {
+  display: block !important;
 }
 
 .logo {
@@ -202,8 +214,9 @@ footer {
     }
   }
 
-  & .side-bar-control {
+  & #side-bar-control {
     display: none;
+    cursor: pointer;
   }
 }
 
@@ -343,7 +356,7 @@ footer {
     }
 
     &.paint {
-      background-image: url("/static/files/portfolio/paint/mfa/_7260042.jpg");
+      background-image: url("/static/files/portfolio/paint/mfa/_7260042.avif");
       background-size: cover;
       background-position: center 50%;
     }
@@ -359,6 +372,7 @@ footer {
 
       & h1 {
         font-weight: normal;
+        text-transform: lowercase;
       }
 
       &:hover > h1 {
@@ -390,7 +404,7 @@ footer {
 }
 
 /* About */
-.profile {
+.about {
   display: flex;
   flex-wrap: wrap;
 
@@ -402,7 +416,7 @@ footer {
       border-radius: 0 50px 50px 0;
       width: 100%;
     }
-    & .profile-cv {
+    & a {
       position: relative;
       margin: 0;
       margin-top: var(--doubled-unit);
@@ -430,7 +444,7 @@ footer {
     }
   }
 
-  & div#profile {
+  & div#about {
     flex: 60%;
     max-width: 60%;
     position: relative;
@@ -459,7 +473,7 @@ footer {
       }
     }
 
-    & .profile-nav {
+    & .about-nav {
       overflow: hidden;
       position: absolute;
       width: 100%;
@@ -467,7 +481,7 @@ footer {
       z-index: 11;
     }
 
-    & .text-block {
+    & .text {
       position: relative;
       top: 48px;
       border: 2px dashed var(--light-gray);
@@ -614,12 +628,11 @@ footer {
 
 /* Zoom */
 .image-zoom {
-  display: block;
+  display: none;
   flex-direction: row;
   background: var(--white);
   width: 100dvw;
   height: 100dvh;
-  visibility: hidden;
 
   z-index: 101;
   position: fixed;
@@ -697,7 +710,7 @@ footer {
         border-bottom: 2px dashed var(--dark-gray);
       }
 
-      & .side-bar-control {
+      & #side-bar-control {
         & div {
           content: unset;
 
@@ -738,7 +751,7 @@ footer {
       }
     }
 
-    & .side-bar-control {
+    & #side-bar-control {
       display: flex;
       width: 100%;
       height: var(--display-margins);
@@ -786,13 +799,13 @@ footer {
   }
 
   /* About */
-  .profile {
+  .about {
     & span {
       flex: 100%;
       max-width: 100%;
     }
 
-    & div#profile {
+    & div#about {
       flex: 100%;
       max-width: 100%;
       margin-top: var(--doubled-unit);
