@@ -8,9 +8,17 @@ if (sideBarCtrl) {
 }
 // end sideBar
 
+// Galleries
+let galleryLoading = false;
+let loaderContinue = null;
+
 // Zoom
 const hideZoom = function () {
   document.getElementById("zoomed-image-window").classList.remove("show");
+  document.getElementById("gallery").classList.toggle('hidden');
+  if (loaderContinue) {
+    loaderContinue();
+  }
 };
 
 const clickImage = function (img) {
@@ -20,20 +28,22 @@ const clickImage = function (img) {
   window.requestAnimationFrame(() => {
     is_showing.src = img;
     document.getElementById("zoomed-image-window").classList.add("show");
+    document.getElementById("gallery").classList.toggle('hidden');
   });
 };
 
-document.getElementById('zoom-exit').addEventListener('click', hideZoom);
+const zoomBox = document.getElementById('zoom-exit');
+if (zoomBox) {
+  zoomBox.addEventListener('click', hideZoom);
+}
 // End Zoom
-
-// Galleries
-let galleryLoading = false;
 
 const setupColumns = function() {
   return isMobile ? makeColumns(2) : makeColumns(4)
 };
 
 const makeColumns = function(id) {
+  // Returns an array of functions which insert a photo into column 'i'
   if (id <= 0) { // recursive break
     return [];
   }
@@ -41,20 +51,12 @@ const makeColumns = function(id) {
   const col = document.createElement("div");
   col.classList.add("column");
 
-  if (isMobile) {
-    col.style.flexWidth = '50%';
-    col.style.maxWidth = '50%';
-  }
-
   document.getElementById("gallery").appendChild(col);
-  // Returns an array functions which insert a photo into column 'i'
   return [((image) => {
-      window.requestAnimationFrame(() => {
-        col.appendChild(image);
-      });
-  })].concat(
-    makeColumns(id-1)
-  );
+    window.requestAnimationFrame( () => {
+      col.appendChild(image);
+    });
+  })].concat(makeColumns(id-1));
 };
 
 const buildImageNode = function(imagePaths) {
@@ -71,13 +73,12 @@ const buildImageNode = function(imagePaths) {
   return image;
 };
 
-const buildPutImage = function (columns) {
-  // returns putImage function which place images into balanced colums
-  return ((image) => {
+const columnPicker = function (columns) {
+  const cols = document.getElementsByClassName("column");
+  return () => {
     // choose a column an put image in
     // find min height index
-    const cols = document.getElementsByClassName("column");
-    let minHeight = 1000000000;
+    let minHeight = Number.MAX_SAFE_INTEGER;
     let minIndex = 0;
     let index = 0;
     for (let col of cols) {
@@ -93,7 +94,16 @@ const buildPutImage = function (columns) {
       }
       index++;
     }
-    columns[minIndex](image);
+    return columns[minIndex];
+  };
+};
+
+const buildPutImage = function (columns) {
+  // returns putImage function which place images into colums
+  const chooseColumn = columnPicker(columns);
+  return ((image) => {
+    chooseColumn()(image);
+    // insert into image linked list
   });
 };
 
@@ -103,46 +113,47 @@ const populateGallery = function (putImage, imagesToLoad) {
     return;
   }
 
-  const image = buildImageNode([imagesToLoad.shift(), imagesToLoad.shift()]);
-  putImage(image);
+  if (document.getElementById('gallery').classList.contains('hidden')) {
+    loaderContinue = () => {
+        populateGallery(putImage, imagesToLoad)
+    };
+    return;
+  }
+
+  putImage(imagesToLoad.shift());
+
   setTimeout((() => {
-    window.requestAnimationFrame(() => {
-      populateGallery(putImage, imagesToLoad);
-    })
+    populateGallery(putImage, imagesToLoad);
   }), 100);
 };
 
 const galleryLoader = function(putImage, images) {
-
   // slice off quantity of images
+  // build nodes
   const imagesToLoad = function (quantity) {
     if (quantity <= 0) {
       return [];
     } else if (images.length <= 0) {
       return [];
     }
-    return [images.shift(), images.shift()].concat(imagesToLoad(quantity-1));
+    return [buildImageNode([images.shift(), images.shift()])].concat(imagesToLoad(quantity-1));
   };
 
   return (() => {
     galleryLoading = true;
     if (images.length <= 0) {
-      window.onscroll = null;
+      window.onscroll = null; // disconnect from scoll event
     }
     populateGallery(putImage, imagesToLoad(24));
   });
 };
 
-const initilizeGallery = function(endpoint) {
-  fetch(endpoint).then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  }).then((res) => {
-
+const initilizeGallery = function(images) {
     const putImage = buildPutImage(setupColumns());
-    const loader = galleryLoader(putImage, res);
+    const loader = galleryLoader(putImage, images);
+    loader(); // inital load
+
+    // hook loader to scrolling
     window.onscroll = function(e) {
       const wHeight = window.innerHeight + Math.round(window.scrollY);
       if (!(wHeight >= document.body.offsetHeight - 400)) {
@@ -152,13 +163,6 @@ const initilizeGallery = function(endpoint) {
         loader();
       }
     };
-
-    loader(); // inital load
-
-  }).catch(error => {
-    console.error('Error:', error);
-    // put loading image?
-  });
 };
 
 const clearGallery = function() {
@@ -169,16 +173,29 @@ const clearGallery = function() {
   }
 };
 
+const doFetch = function(endpoint) {
+  return fetch(endpoint).then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  }).catch(error => {
+    console.error('Error:', error);
+    return '';
+  });
+};
+
 // Photo page
 if (location.pathname == '/photo/') {
-  document.addEventListener("DOMContentLoaded", (event) => {
-    initilizeGallery('/list/photos');
+  document.addEventListener("DOMContentLoaded", async (event) => {
+    initilizeGallery(await doFetch('/list/photos'));
   });
 // end photo
 
 // Painting page
 } else if (location.pathname == '/paint/') {
-  document.addEventListener("DOMContentLoaded", (event) => {
+  document.addEventListener("DOMContentLoaded", async (event) => {
+        initilizeGallery(await doFetch('/list/all'));
   });
 // end Painting
 

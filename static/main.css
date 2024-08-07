@@ -8,19 +8,21 @@
 }
 
 :root {
-    --white: #fdfaf0;
-    --black: #36334d;
-    --red: #962a18;
-    --dark-gray: #8c8a85;
-    --light-gray: #e5e3dc;
-    --yellow: #ffc600;
-    --blue: #648295;
+  --white: #fdfaf0;
+  --black: #36334d;
+  --red: #962a18;
+  --dark-gray: #8c8a85;
+  --light-gray: #e5e3dc;
+  --yellow: #ffc600;
+  --blue: #648295;
 
-    --unit: 10px;
-    --doubled-unit: calc(var(--unit) * 2);
-    --font-size: 1.4rem;
-    --display-margin: calc(6 * var(--unit));
-    --display-margins: calc(2 * var(--display-margin));
+  --unit: 10px;
+  --doubled-unit: calc(var(--unit) * 2);
+  --font-size: 1.4rem;
+  --display-margin: calc(6 * var(--unit));
+  --display-margins: calc(2 * var(--display-margin));
+  scrollbar-color: var(--red) var(--white);
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -70,6 +72,7 @@ h1,h2,h4 {
 h2 {
   text-transform: lowercase;
   color: var(--red);
+  font-size: xx-large;
 }
 
 h2::before {
@@ -451,6 +454,14 @@ footer {
     margin-bottom: 50px;
     margin-left: var(--doubled-unit);
 
+    &:has(.selected#profile) > #profile-text {
+      display: block;
+    }
+
+    &:has(.selected#artist-statement) > #artist-statement-text {
+      display: block;
+    }
+
     & .tab {
       float: left;
       font-size: var(--font-size);
@@ -482,6 +493,7 @@ footer {
     }
 
     & .text {
+      display: none;
       position: relative;
       top: 48px;
       border: 2px dashed var(--light-gray);
@@ -597,8 +609,7 @@ footer {
   padding-bottom: var(--unit);
 
   & .column {
-    flex: 25%;
-    max-width: 25%;
+    flex: 1;
 
     & .image {
       display: block;
@@ -629,38 +640,36 @@ footer {
 /* Zoom */
 .image-zoom {
   display: none;
-  flex-direction: row;
   background: var(--white);
-  width: 100dvw;
-  height: 100dvh;
-
-  z-index: 101;
-  position: fixed;
-  top: 0;
-  left: 0;
+  animation: 0.25s ease-in 0s 1 slide-in;
 
   & .image-zoom-content {
     display: flex;
-    height: 100%;
-    width: 100%;
+    flex-direction: column-reverse;
+    margin: var(--doubled-unit);
 
     & span { 
-      flex: 95%;
+      flex: 80%;
       height: 100%;
       & img {
         background: var(--red);
         display: block;
-        height: 100%;
+        width: 100%;
         margin: auto;
       }
     }
 
     & div {
       flex: 5%;
-      & a.exit {
-        padding: var(--unit);
-        font-size: 2rem;
+      & #zoom-exit {
+        margin-top: var(--unit);
+        margin-bottom: var(--unit);
+        color: var(--red);
+        font-weight: bold;
+        font-size: xx-large;
         cursor: pointer;
+        width: fit-content;
+        float: right;
       }
     }
   }
@@ -819,31 +828,6 @@ footer {
 
     & a {
       margin: 0;
-    }
-  }
-
-  /* Zoom */
-.image-zoom {
-    .image-zoom-content {
-      flex-direction: column-reverse;
-      margin: var(--doubled-unit);
-      height: 100%;
-      width: unset;
-
-      & span  {
-        flex: 80%;
-
-        & img {
-          height: unset;
-          width: calc(100% - var(--unit));
-        }
-      }
-
-      & div {
-        & a.exit {
-          margin-right: var(--unit);
-        }
-      }
     }
   }
 }

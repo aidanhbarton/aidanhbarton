@@ -7,38 +7,39 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"slices"
 )
 
 type pageData struct {
-	Nav bool
-  Content string
+	Nav     bool
+	Content string
 }
 
-var sitePath string;
+var sitePath string
 
 func paint(w http.ResponseWriter, r *http.Request, p *pageData) {
-  p.Content = "The paintings of Aidan H Barton."
+	p.Content = "The paintings of Aidan H Barton."
 	renderTmpl(w, "paint.html", p)
 }
 
 func photo(w http.ResponseWriter, r *http.Request, p *pageData) {
-  p.Content = "The photography of Aidan H Barton."
+	p.Content = "The photography of Aidan H Barton."
 	renderTmpl(w, "photo.html", p)
 }
 
 func about(w http.ResponseWriter, r *http.Request, p *pageData) {
-  p.Content = "Who is Aidan H Barton? Read about his interesting journy here."
+	p.Content = "Who is Aidan H Barton? Read about his interesting journy here."
 	renderTmpl(w, "about.html", p)
 }
 
 func home(w http.ResponseWriter, r *http.Request, p *pageData) {
-  p.Content = "Read about Aidan, or look at his work."
+	p.Content = "Read about Aidan, or look at his work."
 	renderTmpl(w, "home.html", p)
 }
 
 func index(w http.ResponseWriter, r *http.Request, p *pageData) {
 	p.Nav = false
-  p.Content = "The personal website of Aidan H Barton. Artist, Engineer, Philosopher."
+	p.Content = "The personal website of Aidan H Barton. Artist, Engineer, Philosopher."
 	renderTmpl(w, "index.html", p)
 }
 
@@ -59,19 +60,19 @@ func renderTmpl(w http.ResponseWriter, tmpl string, p *pageData) {
 }
 
 func addHeaders(w http.ResponseWriter) {
-    w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubdomains")
+	w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubdomains")
 
-    w.Header().Add("Content-Security-Policy", "default-src 'self' https://aidanhbarton.me/; object-src 'none'; form-action 'none'")
+	w.Header().Add("Content-Security-Policy", "default-src 'self' https://aidanhbarton.me/; object-src 'none'; form-action 'none'")
 
-    w.Header().Add("X-Frame-Options", "DENY")
-    w.Header().Add("X-Content-Type-Options", "nosniff")
-    w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
+	w.Header().Add("X-Frame-Options", "DENY")
+	w.Header().Add("X-Content-Type-Options", "nosniff")
+	w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
 }
 
 func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http.HandlerFunc {
 	validPath := regexp.MustCompile("^/($|(home|about|photo|paint)/?$)")
 	return func(w http.ResponseWriter, r *http.Request) {
-    addHeaders(w)
+		addHeaders(w)
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 		m := validPath.MatchString(r.URL.Path)
 		if !m {
@@ -94,7 +95,7 @@ func dirToJSON(path string) []byte {
 	}
 
 	for _, file := range f {
-		filesToJson = append(filesToJson, "/" + path + file.Name())
+		filesToJson = append(filesToJson, "/"+path+file.Name())
 	}
 
 	filesAsJson, err := json.Marshal(filesToJson)
@@ -108,15 +109,16 @@ func dirToJSON(path string) []byte {
 
 func buildListHandler() http.HandlerFunc {
 	validPath := regexp.MustCompile("^/list/(photos|mfa|venice|portraiture|copies)$")
-	photoJson := dirToJSON("static/files/portfolio/photo/") 
+	photoJson := dirToJSON("static/files/portfolio/photo/")
 	mfaJson := dirToJSON("static/files/portfolio/paint/mfa/")
 	veniceJson := dirToJSON("static/files/portfolio/paint/venice/")
 	portraitureJson := dirToJSON("static/files/portfolio/paint/portraiture/")
 	copiesJson := dirToJSON("static/files/portfolio/paint/copies/")
+	allJson := slices.Concat(mfaJson, veniceJson, portraitureJson, copiesJson)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-    addHeaders(w)
-    w.Header().Add("Content-Type", "text/plain")
+		addHeaders(w)
+		w.Header().Add("Content-Type", "text/plain")
 
 		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 		m := validPath.FindStringSubmatch(r.URL.Path)
@@ -136,6 +138,8 @@ func buildListHandler() http.HandlerFunc {
 			w.Write(portraitureJson)
 		case "copies":
 			w.Write(copiesJson)
+		case "all":
+			w.Write(allJson)
 		}
 
 	}
@@ -160,5 +164,5 @@ func main() {
 
 	port := ":5050"
 	log.Printf("\tServing at 127.0.0.1" + port)
-	log.Fatal(http.ListenAndServeTLS(port,"cert/fullchain.pem", "cert/privkey.pem", nil))
+	log.Fatal(http.ListenAndServeTLS(port, "cert/fullchain.pem", "cert/privkey.pem", nil))
 }
