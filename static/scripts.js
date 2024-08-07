@@ -1,4 +1,4 @@
-const isMobile = window.matchMedia("(max-width: 600px)").matches;
+const isMobile = window.matchMedia("(max-width: 700px)").matches;
 const toggler = (id, nameToToggle) => { document.getElementById(id).classList.toggle(nameToToggle) };
 
 // sideBar

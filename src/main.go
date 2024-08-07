@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"slices"
 )
 
 type pageData struct {
@@ -85,13 +84,13 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 	}
 }
 
-func dirToJSON(path string) []byte {
+func dirToJSON(path string) ([]byte, error) {
 	var filesToJson []string
 	f, err := os.ReadDir(sitePath + "/" + path)
 
 	if err != nil {
 		log.Printf("Error reading %s: %v", path, err)
-		return []byte("")
+		return nil, err
 	}
 
 	for _, file := range f {
@@ -101,20 +100,23 @@ func dirToJSON(path string) []byte {
 	filesAsJson, err := json.Marshal(filesToJson)
 	if err != nil {
 		log.Printf("Error building Json")
-		return []byte("")
+		return nil, err
 	}
 
-	return filesAsJson
+	return filesAsJson, nil
+}
+
+func sendList(w http.ResponseWriter, path string) {
+	leJsone, err := dirToJSON(path)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte(leJsone))
 }
 
 func buildListHandler() http.HandlerFunc {
-	validPath := regexp.MustCompile("^/list/(photos|mfa|venice|portraiture|copies)$")
-	photoJson := dirToJSON("static/files/portfolio/photo/")
-	mfaJson := dirToJSON("static/files/portfolio/paint/mfa/")
-	veniceJson := dirToJSON("static/files/portfolio/paint/venice/")
-	portraitureJson := dirToJSON("static/files/portfolio/paint/portraiture/")
-	copiesJson := dirToJSON("static/files/portfolio/paint/copies/")
-	allJson := slices.Concat(mfaJson, veniceJson, portraitureJson, copiesJson)
+	validPath := regexp.MustCompile("^/list/(photos|all|mfa|venice|portraiture|copies)$")
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		addHeaders(w)
@@ -129,17 +131,17 @@ func buildListHandler() http.HandlerFunc {
 
 		switch m[1] {
 		case "photos":
-			w.Write(photoJson)
+			sendList(w, "static/files/portfolio/photo/")
 		case "mfa":
-			w.Write(mfaJson)
+			sendList(w, "static/files/portfolio/paint/mfa/")
 		case "venice":
-			w.Write(veniceJson)
+			sendList(w, "static/files/portfolio/paint/venice/")
 		case "portraiture":
-			w.Write(portraitureJson)
+			sendList(w, "static/files/portfolio/paint/portraiture/")
 		case "copies":
-			w.Write(copiesJson)
+			sendList(w, "static/files/portfolio/paint/copies/")
 		case "all":
-			w.Write(allJson)
+			sendList(w, "static/files/portfolio/paint/venice/")
 		}
 
 	}

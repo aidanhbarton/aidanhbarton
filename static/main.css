@@ -22,7 +22,6 @@
   --display-margin: calc(6 * var(--unit));
   --display-margins: calc(2 * var(--display-margin));
   scrollbar-color: var(--red) var(--white);
-  scrollbar-gutter: stable;
 }
 
 body {
@@ -676,7 +675,7 @@ footer {
 }
 
 /* Responsive */
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   :root {
     --unit: 5px;
     --font-size: 1.2rem;
