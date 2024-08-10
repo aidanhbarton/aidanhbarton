@@ -126,7 +126,7 @@ func buildJSONLists(j *jsonLists) {
 	j.Mfa = toJSON(fetchDir(paintPath + "/mfa/"))
 	j.Venice = toJSON(fetchDir(paintPath + "/venice/"))
 	j.Portraiture = toJSON(fetchDir(paintPath + "/portraiture/"))
-	j.Copies = toJSON(fetchDir(paintPath + "/copies"))
+	j.Copies = toJSON(fetchDir(paintPath + "/copies/"))
 
 	var allPaintList []string
 	var curDirList []string

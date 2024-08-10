@@ -46,6 +46,10 @@ main:has(#cover) {
     padding: 0;
 }
 
+main:has(#gallery-ctrl) > footer{
+  padding-bottom: 100px;
+}
+
 a {
   display: block;
   width: fit-content;
@@ -153,6 +157,11 @@ footer {
   width: 100%;
   min-height: calc(100dvh - 175px);
 }
+
+.page-content:has(.image-zoom.show) > #gallery-ctrl {
+  display: none;
+}
+
 
 /* Sidebar */
 .side-bar {
@@ -636,6 +645,52 @@ footer {
   }
 }
 
+/* Gal CTRL */
+#gallery-ctrl {
+  display: flex;
+  width: calc(100% - 200px - (2*var(--doubled-unit)));
+  font-size: x-large;
+  padding-top: var(--doubled-unit);
+  padding-bottom: var(--doubled-unit);
+  position: fixed;
+  bottom: var(--doubled-unit);
+  z-index: 100;
+  background: var(--red);
+  color: var(--white);
+  border-radius: 10px;
+
+  & label {
+    margin-left: var(--doubled-unit);
+    margin-right: var(--unit);
+    flex: 25%;
+    max-width: 25%;
+    text-transform: lowercase;
+    border-right: 2px dashed var(--white);
+    text-align: center;
+  }
+
+  & select {
+    margin-right: var(--doubled-unit);
+    font-family: 'EB Garamond';
+    font-size: large;
+    flex-grow: 1;
+    background: var(--red);
+    color: var(--white);
+    border: 2px dashed var(--white);
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    & option {
+      background: var(--white);
+      color: var(--black);
+      &:hover {
+        background: var(--red);
+        border: 0px;
+        color: var(--white);
+      }
+    }
+  }
+}
+
 /* Zoom */
 .image-zoom {
   display: none;
@@ -699,7 +754,16 @@ footer {
     padding-top: calc(var(--display-margins));
   }
 
+  main:has(#gallery-ctrl) > footer{
+    padding-bottom: 75px;
+  }
+
+  body:has(.side-bar.opened) > main .page-content #gallery-ctrl {
+    display: none;
+  }
+
   /* Sidebar */
+
   .side-bar {
     background: var(--red);
     color: var(--white);
@@ -828,5 +892,11 @@ footer {
     & a {
       margin: 0;
     }
+  }
+
+  #gallery-ctrl {
+    width: calc(100% - (2*var(--doubled-unit)));
+    padding-top: var(--display-margin);
+    padding-bottom: var(--display-margin);
   }
 }
