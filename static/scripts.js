@@ -171,6 +171,7 @@ const clearGallery = function() {
     gal[0].remove();
     clearGallery();
   }
+  window.scrollTo(0, 0);
 };
 
 const doFetch = function(endpoint) {
@@ -185,6 +186,9 @@ const doFetch = function(endpoint) {
   });
 };
 
+const addGalCtrl = function(ctrl) {
+};
+
 // Photo page
 if (location.pathname == '/photo/') {
   document.addEventListener("DOMContentLoaded", async (event) => {
@@ -195,7 +199,13 @@ if (location.pathname == '/photo/') {
 // Painting page
 } else if (location.pathname == '/paint/') {
   document.addEventListener("DOMContentLoaded", async (event) => {
-        initilizeGallery(await doFetch('/list/all'));
+    initilizeGallery(await doFetch('/list/all'));
+    document.getElementById('gal-ctrl-input').addEventListener('change',
+        async (event) => {
+            clearGallery();
+            const toLoad = '/list/' + event.target.value;
+            initilizeGallery(await doFetch(toLoad));
+        });
   });
 // end Painting
 

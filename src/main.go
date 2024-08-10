@@ -120,13 +120,13 @@ type jsonLists struct {
 func buildJSONLists(j *jsonLists) {
 	photosPath := "static/files/portfolio/photo/"
 	paintPath := "static/files/portfolio/paint/"
-	paintPathURIs := [4]string{"mfa", "venice", "copies", "portraiture"}
+	paintPathURIs := [4]string{"mfa", "2023", "2024", "copies"}
 
 	j.Photos = toJSON(fetchDir(photosPath))
 	j.Mfa = toJSON(fetchDir(paintPath + "/mfa/"))
-	j.Venice = toJSON(fetchDir(paintPath + "/venice/"))
-	j.Portraiture = toJSON(fetchDir(paintPath + "/portraiture/"))
-	j.Copies = toJSON(fetchDir(paintPath + "/copies"))
+	j.Venice = toJSON(fetchDir(paintPath + "/2023/"))
+	j.Portraiture = toJSON(fetchDir(paintPath + "/2024/"))
+	j.Copies = toJSON(fetchDir(paintPath + "/copies/"))
 
 	var allPaintList []string
 	var curDirList []string
@@ -140,7 +140,7 @@ func buildJSONLists(j *jsonLists) {
 }
 
 func buildListHandler() http.HandlerFunc {
-	validPath := regexp.MustCompile("^/list/(photos|all|mfa|venice|portraiture|copies)$")
+	validPath := regexp.MustCompile("^/list/(photos|all|mfa|2023|2024|copies)$")
 	jsonified := new(jsonLists)
 	buildJSONLists(jsonified)
 
@@ -160,9 +160,9 @@ func buildListHandler() http.HandlerFunc {
 			w.Write(jsonified.Photos)
 		case "mfa":
 			w.Write(jsonified.Mfa)
-		case "venice":
+		case "2023":
 			w.Write(jsonified.Venice)
-		case "portraiture":
+		case "2024":
 			w.Write(jsonified.Portraiture)
 		case "copies":
 			w.Write(jsonified.Copies)

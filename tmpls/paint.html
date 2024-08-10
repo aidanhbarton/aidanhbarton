@@ -10,6 +10,16 @@
         <div><div id="zoom-exit">&#10005;</div></div>
       </div>
     </div>
+    <div id="gallery-ctrl">
+      <label for="gal-ctrl-input">Showing:</label>
+      <select name="gal-ctrl-input" id="gal-ctrl-input">
+        <option selected="selected" value="all">All Paintings</option>
+        <option value="mfa">MFA Exhibition (2024)</option>
+        <option value="2024">2024 Paintings</option>
+        <option value="2023">2023 Paintings</option>
+        <option value="copies">Copies</option>
+      </select>
+    </div>
     <div class="gallery" id="gallery"></div> 
   </div>
 {{ template "footer" . }}
