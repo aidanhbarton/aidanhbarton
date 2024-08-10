@@ -670,7 +670,7 @@ footer {
   }
 
   & select {
-    margin-right: var(--doubled-unit);
+    margin-right: var(--display-margin);
     font-family: 'EB Garamond';
     font-size: large;
     flex-grow: 1;
