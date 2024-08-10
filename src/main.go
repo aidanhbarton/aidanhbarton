@@ -61,7 +61,8 @@ func renderTmpl(w http.ResponseWriter, tmpl string, p *pageData) {
 func addHeaders(w http.ResponseWriter) {
 	w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubdomains")
 
-	w.Header().Add("Content-Security-Policy", "default-src 'self' https://aidanhbarton.me/; object-src 'none'; form-action 'none'")
+	w.Header().Add("Content-Security-Policy",
+		"default-src 'self' https://aidanhbarton.me/; object-src 'none'; form-action 'none'")
 
 	w.Header().Add("X-Frame-Options", "DENY")
 	w.Header().Add("X-Content-Type-Options", "nosniff")
@@ -84,39 +85,64 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 	}
 }
 
-func dirToJSON(path string) ([]byte, error) {
-	var filesToJson []string
+func fetchDir(path string) []string {
+	var fileList []string
 	f, err := os.ReadDir(sitePath + "/" + path)
-
 	if err != nil {
-		log.Printf("Error reading %s: %v", path, err)
-		return nil, err
+		log.Panicf("Error reading %s: %v", path, err)
 	}
 
 	for _, file := range f {
-		filesToJson = append(filesToJson, "/"+path+file.Name())
+		fileList = append(fileList, "/"+path+file.Name())
 	}
 
-	filesAsJson, err := json.Marshal(filesToJson)
-	if err != nil {
-		log.Printf("Error building Json")
-		return nil, err
-	}
-
-	return filesAsJson, nil
+	return fileList
 }
 
-func sendList(w http.ResponseWriter, path string) {
-	leJsone, err := dirToJSON(path)
+func toJSON(sJson []string) []byte {
+	var bJson []byte
+	bJson, err := json.Marshal(sJson)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Panicf("Fatal error initializing JSONs: %v", err)
 	}
-	w.Write([]byte(leJsone))
+	return bJson
+}
+
+type jsonLists struct {
+	Photos      []byte
+	Mfa         []byte
+	Venice      []byte
+	Portraiture []byte
+	Copies      []byte
+	All         []byte
+}
+
+func buildJSONLists(j *jsonLists) {
+	photosPath := "static/files/portfolio/photo/"
+	paintPath := "static/files/portfolio/paint/"
+	paintPathURIs := [4]string{"mfa", "venice", "copies", "portraiture"}
+
+	j.Photos = toJSON(fetchDir(photosPath))
+	j.Mfa = toJSON(fetchDir(paintPath + "/mfa/"))
+	j.Venice = toJSON(fetchDir(paintPath + "/venice/"))
+	j.Portraiture = toJSON(fetchDir(paintPath + "/portraiture/"))
+	j.Copies = toJSON(fetchDir(paintPath + "/copies"))
+
+	var allPaintList []string
+	var curDirList []string
+
+	for _, uri := range paintPathURIs {
+		curDirList = fetchDir(paintPath + "/" + uri + "/")
+		allPaintList = append(allPaintList, curDirList...)
+	}
+
+	j.All = toJSON(allPaintList)
 }
 
 func buildListHandler() http.HandlerFunc {
 	validPath := regexp.MustCompile("^/list/(photos|all|mfa|venice|portraiture|copies)$")
+	jsonified := new(jsonLists)
+	buildJSONLists(jsonified)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		addHeaders(w)
@@ -131,19 +157,18 @@ func buildListHandler() http.HandlerFunc {
 
 		switch m[1] {
 		case "photos":
-			sendList(w, "static/files/portfolio/photo/")
+			w.Write(jsonified.Photos)
 		case "mfa":
-			sendList(w, "static/files/portfolio/paint/mfa/")
+			w.Write(jsonified.Mfa)
 		case "venice":
-			sendList(w, "static/files/portfolio/paint/venice/")
+			w.Write(jsonified.Venice)
 		case "portraiture":
-			sendList(w, "static/files/portfolio/paint/portraiture/")
+			w.Write(jsonified.Portraiture)
 		case "copies":
-			sendList(w, "static/files/portfolio/paint/copies/")
+			w.Write(jsonified.Copies)
 		case "all":
-			sendList(w, "static/files/portfolio/paint/venice/")
+			w.Write(jsonified.All)
 		}
-
 	}
 }
 
