@@ -337,10 +337,7 @@ footer {
   color: var(--white);
 
   & .level-wrapper {
-    position: relative;
     flex: 1;
-    transition: flex 0.25s ease-in;
-    overflow:hidden;
     border-top: var(--doubled-unit) solid var(--white);
     border-bottom: var(--doubled-unit) solid var(--white);
     background: var(--red);
@@ -352,6 +349,7 @@ footer {
 
   & .level {
     height: 100%;
+    display: flex;
     pointer-events: none;
 
     &.about {
@@ -375,10 +373,6 @@ footer {
     & a {
       position: relative;
       z-index: 11;
-      align-content: center;
-      text-align: center;
-      height: 100%;
-      width: 400px;
       pointer-events: all;
 
       & h1 {
@@ -388,18 +382,9 @@ footer {
 
       &:hover > h1 {
         font-weight: bold;
-      }
-
-      &:hover {
-        color: var(--white);
+        color: white;
       }
     }
-  }
-
-  & .level-wrapper:has(a:hover) {
-    flex: 5;
-    border-left: var(--unit) dashed;
-    border-right: var(--unit) dashed;
   }
 }
 
@@ -423,23 +408,27 @@ footer {
     flex: 33%;
     max-width: 33%;
     height: fit-content;
+    margin-left: auto;
+
     & img {
       border-radius: 0 50px 50px 0;
-      width: 100%;
+      width: 80%;
     }
     & a {
       position: relative;
       margin: 0;
       margin-top: var(--doubled-unit);
       margin-bottom: var(--doubled-unit);
-      width: calc(100% - var(--doubled-unit));
+      width: calc(80% - var(--doubled-unit));
       height: 100px;
 
       border: 2px dashed var(--light-gray);
-      border-radius: 10px 10px 10px 10px;
+      border-radius: 0px 20px 20px 0px;
 
       &:hover {
         border-color: var(--red);
+        background: var(--red);
+        color: var(--white);
       }
 
       & p {
@@ -657,7 +646,8 @@ footer {
   z-index: 100;
   background: var(--red);
   color: var(--white);
-  border-radius: 10px;
+  border-radius: 0 25px 25px 0;
+  animation: 0.5s cubic-bezier(0.0, 0.0, 0.75, 1) 0s 1 slide-in;
 
   & label {
     margin-left: var(--doubled-unit);
@@ -862,19 +852,13 @@ footer {
     & .level-wrapper a:hover > h1 {
       font-weight: normal;
     }
-
-    & .level-wrapper:has(a:hover) {
-      flex: 1;
-      border-left: 0;
-      border-right: 0;
-    }
   }
 
   /* About */
   .about {
     & span {
-      flex: 100%;
-      max-width: 100%;
+      flex: 80%;
+      max-width: 80%;
     }
 
     & div#about {
