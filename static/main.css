@@ -410,9 +410,25 @@ footer {
     height: fit-content;
     margin-left: auto;
 
-    & img {
+    & div {
       border-radius: 0 50px 50px 0;
       width: 80%;
+      overflow: hidden;
+      position: relative;
+      background: var(--light-gray);
+      border: 2px dashed var(--light-gray);
+
+      & .form {
+        margin-top: 125%;
+        /* 4:3 */
+      }
+
+      & img {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
     }
     & a {
       position: relative;
@@ -471,9 +487,12 @@ footer {
       border: 2px dashed var(--white);
       border-radius: 10px 10px;
       font-weight: normal;
+      border: 2px dashed var(--light-gray);
+      & + .tab {
+        margin-left: var(--unit);
+      }
 
       &.selected {
-        border: 2px dashed var(--light-gray);
         background: var(--white);
         color: var(--red);
         padding-top: 5px;
@@ -720,6 +739,23 @@ footer {
 }
 
 /* Responsive */
+@media only screen and (max-width: 1000px) {
+  /* About */
+  .about {
+    & span {
+      flex: 80%;
+      max-width: 80%;
+    }
+
+    & div#about {
+      flex: 100%;
+      max-width: 100%;
+      margin-top: var(--doubled-unit);
+      margin-left: 0;
+    }
+  }
+}
+
 @media only screen and (max-width: 700px) {
   :root {
     --unit: 5px;
@@ -851,21 +887,6 @@ footer {
 
     & .level-wrapper a:hover > h1 {
       font-weight: normal;
-    }
-  }
-
-  /* About */
-  .about {
-    & span {
-      flex: 80%;
-      max-width: 80%;
-    }
-
-    & div#about {
-      flex: 100%;
-      max-width: 100%;
-      margin-top: var(--doubled-unit);
-      margin-left: 0;
     }
   }
 
