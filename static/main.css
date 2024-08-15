@@ -190,16 +190,18 @@ footer {
 
     & span {
       flex: 60%;
-      position: relative;
-      padding: var(--unit);
+      display: flex;
 
       & a {
-        width: 100%;
+        height: 200px;
+        width: 200px;
+        margin: 0;
+        display: flex;
+
         & img {
           margin: auto;
-          display: block;
-          width: 100%;
-          max-width: 96px;
+          width: 60%;
+          max-width: 64px;
           content: url('/static/files/logo.png');
         }
       }
@@ -347,28 +349,28 @@ footer {
     border-top: 0;
   }
 
+  & #about {
+    background-image: url("/static/files/portfolio/photo/_6220011.avif");
+    background-size: cover;
+    background-position: center 20%;
+  }
+
+  & #photo {
+    background-image: url("/static/files/portfolio/photo/_7180037.avif");
+    background-size: cover;
+    background-position: center 70%;
+  }
+
+  & #paint {
+    background-image: url("/static/files/portfolio/paint/mfa/_7260042.avif");
+    background-size: cover;
+    background-position: center 50%;
+  }
+
   & .level {
     height: 100%;
     display: flex;
     pointer-events: none;
-
-    &.about {
-      background-image: url("/static/files/portfolio/photo/_6220011.avif");
-      background-size: cover;
-      background-position: center 20%;
-    }
-
-    &.photo {
-      background-image: url("/static/files/portfolio/photo/_7180037.avif");
-      background-size: cover;
-      background-position: center 70%;
-    }
-
-    &.paint {
-      background-image: url("/static/files/portfolio/paint/mfa/_7260042.avif");
-      background-size: cover;
-      background-position: center 50%;
-    }
 
     & a {
       position: relative;
@@ -403,6 +405,8 @@ footer {
 .about {
   display: flex;
   flex-wrap: wrap;
+  max-width: 1000px;
+  margin: auto;
 
   & span {
     flex: 33%;
@@ -413,6 +417,7 @@ footer {
     & div {
       border-radius: 0 50px 50px 0;
       width: 80%;
+      max-width: 300px;
       overflow: hidden;
       position: relative;
       background: var(--light-gray);
@@ -436,10 +441,11 @@ footer {
       margin-top: var(--doubled-unit);
       margin-bottom: var(--doubled-unit);
       width: calc(80% - var(--doubled-unit));
+      max-width: 300px;
       height: 100px;
 
       border: 2px dashed var(--light-gray);
-      border-radius: 0px 20px 20px 0px;
+      border-radius: 0px 40px 40px 0px;
 
       &:hover {
         border-color: var(--red);
@@ -622,6 +628,8 @@ footer {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  max-width: 800px;
+  margin: auto;
   padding-bottom: var(--unit);
 
   & .column {
@@ -708,8 +716,9 @@ footer {
 
   & .image-zoom-content {
     display: flex;
+    max-width: 800px;
     flex-direction: column-reverse;
-    margin: var(--doubled-unit);
+    margin: auto;
 
     & span { 
       flex: 80%;
@@ -717,8 +726,9 @@ footer {
       & img {
         background: var(--red);
         display: block;
-        width: 100%;
         margin: auto;
+        max-width: 100%;
+        max-height: 600px;
       }
     }
 
@@ -839,11 +849,10 @@ footer {
         flex: 40%;
 
         a {
-            position: absolute;
-            bottom: var(--display-margin);
+          margin: auto;
           & img {
             width: 30%;
-            max-width: unset;
+            max-width: 64px;
           }
         }
       }
@@ -897,6 +906,10 @@ footer {
     & a {
       margin: 0;
     }
+  }
+
+  .gallery {
+    max-width: 400px;
   }
 
   #gallery-ctrl {

@@ -51,12 +51,14 @@ const makeColumns = function(id) {
   const col = document.createElement("div");
   col.classList.add("column");
 
-  document.getElementById("gallery").appendChild(col);
-  return [((image) => {
-    window.requestAnimationFrame( () => {
+  const putImgToDOM = function (image) {
+    window.requestAnimationFrame(() => {
       col.appendChild(image);
     });
-  })].concat(makeColumns(id-1));
+  };
+
+  document.getElementById("gallery").appendChild(col);
+  return [(image) => putImgToDOM(image)].concat(makeColumns(id-1));
 };
 
 const buildImageNode = function(imagePaths) {
@@ -102,8 +104,7 @@ const buildPutImage = function (columns) {
   // returns putImage function which place images into colums
   const chooseColumn = columnPicker(columns);
   return ((image) => {
-    chooseColumn()(image);
-    // insert into image linked list
+      chooseColumn()(image);
   });
 };
 
@@ -184,9 +185,6 @@ const doFetch = function(endpoint) {
     console.error('Error:', error);
     return '';
   });
-};
-
-const addGalCtrl = function(ctrl) {
 };
 
 // Photo page
