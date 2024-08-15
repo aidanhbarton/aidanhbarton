@@ -120,7 +120,7 @@ type jsonLists struct {
 func buildJSONLists(j *jsonLists) {
 	photosPath := "static/files/portfolio/photo/"
 	paintPath := "static/files/portfolio/paint/"
-	paintPathURIs := [4]string{"mfa", "2023", "2024", "copies"}
+	paintPathURIs := [4]string{"mfa", "2024", "2023", "copies"}
 
 	j.Photos = toJSON(fetchDir(photosPath))
 	j.Mfa = toJSON(fetchDir(paintPath + "/mfa/"))
