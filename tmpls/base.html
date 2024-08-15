@@ -14,6 +14,13 @@
     <title>Aidan H. Barton</title>
     <link type="image/x-icon" rel="icon" href="/static/files/favicon.png"/>
     <link type="text/css" rel="stylesheet" href="/static/main.css"/>
+    <link rel="preload" href="/static/files/fonts/EBGaramond-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="/static/files/fonts/CenturyGothicPaneuropeanRegular.ttf" as="font" type="font/ttf" crossorigin>
+    {{ if .Prefetch }}
+        {{ range .Prefetch }}
+    <link rel="preload" href="{{ .URL }}" as="{{ .As }}">
+        {{ end }}
+    {{ end }}
     <script defer src='/static/scripts.js'></script>
 
   </head>

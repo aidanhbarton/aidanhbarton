@@ -9,12 +9,25 @@ import (
 	"regexp"
 )
 
+type prefetchData struct {
+	URL string
+	As  string
+}
+
 type pageData struct {
 	Nav     bool
 	Content string
+	Prefetch *[]prefetchData
 }
 
 var sitePath string
+var aboutPrefetch *[]prefetchData = &[]prefetchData{{URL: "/static/files/profile.avif", As: "image"}}
+var homePrefetch *[]prefetchData = &[]prefetchData{
+	{URL: "/static/files/portfolio/photo/_6220011.avif", As: "image"},
+	{URL: "/static/files/portfolio/photo/_7180037.avif", As: "image"},
+	{URL: "/static/files/portfolio/paint/mfa/_7260042.avif", As: "image"},
+}
+var indexPrefetch *[]prefetchData = &[]prefetchData{{URL: "/static/files/cover.avif", As: "image"}}
 
 func paint(w http.ResponseWriter, r *http.Request, p *pageData) {
 	p.Content = "The paintings of Aidan H Barton."
@@ -28,17 +41,20 @@ func photo(w http.ResponseWriter, r *http.Request, p *pageData) {
 
 func about(w http.ResponseWriter, r *http.Request, p *pageData) {
 	p.Content = "Who is Aidan H Barton? Read about his interesting journy here."
+	p.Prefetch = aboutPrefetch
 	renderTmpl(w, "about.html", p)
 }
 
 func home(w http.ResponseWriter, r *http.Request, p *pageData) {
 	p.Content = "Read about Aidan, or look at his work."
+	p.Prefetch = homePrefetch
 	renderTmpl(w, "home.html", p)
 }
 
 func index(w http.ResponseWriter, r *http.Request, p *pageData) {
 	p.Nav = false
 	p.Content = "The personal website of Aidan H Barton. Artist, Engineer, Philosopher."
+	p.Prefetch = indexPrefetch
 	renderTmpl(w, "index.html", p)
 }
 
@@ -81,26 +97,26 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 		}
 		p := new(pageData)
 		p.Nav = true
+		p.Prefetch = nil
 		fn(w, r, p)
 	}
 }
 
 func fetchDir(path string) []string {
-	var fileList []string
 	f, err := os.ReadDir(sitePath + "/" + path)
 	if err != nil {
 		log.Panicf("Error reading %s: %v", path, err)
 	}
 
-	for _, file := range f {
-		fileList = append(fileList, "/"+path+file.Name())
+	fileList := make([]string,len(f))
+	for i, file := range f {
+		fileList[i] = "/"+path+file.Name()
 	}
 
 	return fileList
 }
 
 func toJSON(sJson []string) []byte {
-	var bJson []byte
 	bJson, err := json.Marshal(sJson)
 	if err != nil {
 		log.Panicf("Fatal error initializing JSONs: %v", err)

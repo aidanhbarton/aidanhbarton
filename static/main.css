@@ -1,10 +1,12 @@
 @font-face {
   font-family: 'Century Gothic';
   src: url(/static/files/fonts/CenturyGothicPaneuropeanRegular.ttf);
+  font-display: fallback;
 }
 @font-face {
   font-family: 'EB Garamond';
   src: url(/static/files/fonts/EBGaramond-Regular.ttf);
+  font-display: fallback;
 }
 
 :root {
@@ -376,6 +378,10 @@ footer {
       position: relative;
       z-index: 11;
       pointer-events: all;
+      height: 100%;
+      width: 100%;
+      align-content: center;
+      text-align: center;
 
       & h1 {
         font-weight: normal;
