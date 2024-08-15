@@ -45,9 +45,7 @@ const populateGallery = function (chooseColumn, nodeReadyQueue) {
 
   if (document.getElementById('gallery').classList.contains('hidden')) {
     // pause
-    loaderContinue = () => {
-        populateGallery(chooseColumn, nodeReadyQueue)
-    };
+    loaderContinue = () => populateGallery(chooseColumn, nodeReadyQueue);
     return
   }
 
