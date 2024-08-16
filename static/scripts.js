@@ -9,7 +9,6 @@ if (sideBarCtrl) {
 // end sideBar
 
 // Galleries
-let galleryLoading = false;
 let loaderContinue = null;
 let scrollYSave = 0;
 
@@ -40,27 +39,6 @@ if (zoomBox) {
   zoomBox.addEventListener('click', hideZoom);
 }
 // End Zoom
-const populateGallery = function (chooseColumn, nodeReadyQueue) {
-  if (nodeReadyQueue.awaiting == 0) { // all loaded
-    galleryLoading = false;
-    return
-  }
-
-  if (document.getElementById('gallery').classList.contains('hidden')) {
-    // pause
-    loaderContinue = () => populateGallery(chooseColumn, nodeReadyQueue);
-    return
-  }
-
-  if (nodeReadyQueue.queue.length) {
-    chooseColumn(nodeReadyQueue.queue.shift());
-    nodeReadyQueue.awaiting--;
-  }
-
-  setTimeout((() => {
-    populateGallery(chooseColumn, nodeReadyQueue);
-  }), 100);
-};
 
 const findShortestColumn = function (columns) {
   const cols = document.getElementsByClassName("column");
@@ -83,11 +61,35 @@ const findShortestColumn = function (columns) {
     index++;
   }
 
-  return columns[minIndex];
+  return minIndex;
 };
 
-const nodify = function(imagePaths, nodeReadyQueue) {
+const populateGallery = function (nodeIndex, nodeQueue, columns) {
+    loaderContinue = null;
+    if (nodeIndex >= nodeQueue.length) {
+        return
+    }
+
+    if (document.getElementById('gallery').classList.contains('hidden')) {
+      // pause
+      loaderContinue = () => populateGallery(nodeIndex, nodeQueue);
+      return
+    }
+    if (!nodeQueue[nodeIndex].lastChild.lastChild.complete) {
+      nodeQueue[nodeIndex].lastChild.lastChild.addEventListener("load",
+        () => populateGallery(nodeIndex, nodeQueue, columns));
+      return
+    }
+
+    columns[findShortestColumn()](nodeQueue[nodeIndex]);
+
+    nodeIndex++;
+    setTimeout(() => populateGallery(nodeIndex, nodeQueue, columns), 50);
+};
+
+const nodify = function(imagePaths) {
   const img = document.createElement("img");
+  img.src = imagePaths[0]; // small version
 
   const div = document.createElement("a");
   div.addEventListener("click", () => { clickImage(imagePaths[1]); });
@@ -97,81 +99,42 @@ const nodify = function(imagePaths, nodeReadyQueue) {
   image.classList.add("image");
   image.appendChild(div);
 
-  img.addEventListener('load', () => nodeReadyQueue.queue.push(image));
-  img.src = imagePaths[0]; // small version
   return image;
 };
 
-const buildLoader = function(columns, imagePaths) {
-  const nodeReadyQueue = {
-    'awaiting': 0,
-    'queue': new Array()
-  };
-  const buildImageNodes = function (quantity) {
-    if (quantity <= 0 || imagePaths.length <= 0) {
-      return new Array();
-    }
+const load = function(columns, imagePaths) {
+  const nodeQueue = new Array(imagePaths.length/2);
 
-    nodify([imagePaths.shift(), imagePaths.shift()], nodeReadyQueue);
-    nodeReadyQueue.awaiting++;
-    buildImageNodes(quantity-1);
-  };
-
-  const chooseColumn = (image) => findShortestColumn(columns)(image);
-
-  return (() => {
-    galleryLoading = true; // gallery is now loading N new nodes
-    if (imagePaths.length <= 0) {
-      window.onscroll = null; // disconnect from scoll event
-    }
-    buildImageNodes(24)
-    populateGallery(chooseColumn, nodeReadyQueue);
-  });
-};
-
-const makeColumns = function(id) {
-  // Returns an array of functions which insert a photo into column 'i'
-  if (id <= 0) { // recursive break
-    return [];
+  for (let i = 0; i < imagePaths.length; i += 2) {
+    nodeQueue[i/2] = nodify([imagePaths[i], imagePaths[i+1]]);
   }
 
-  const col = document.createElement("div");
-  col.classList.add("column");
-
-  const putImageIntoColumn = function (image) {
-    window.requestAnimationFrame(() => {
-      col.appendChild(image);
-    });
-  };
-
-  document.getElementById("gallery").appendChild(col);
-  return [(image) => putImageIntoColumn(image)].concat(makeColumns(id-1));
-};
-
-const setupColumns = function() {
-  return isMobile ? makeColumns(2) : makeColumns(4)
+  populateGallery(0, nodeQueue, columns);
 };
 
 const initilizeGallery = function(images) {
-    const loader = buildLoader(setupColumns(), images);
-    loader(); // inital load
-    // hook loader to scrolling
-    window.onscroll = function(e) {
-      const scrollLocation = window.innerHeight + Math.round(window.scrollY);
-      if (!(scrollLocation >= document.body.offsetHeight - 400)) {
-        return;
-      }
-      if (!galleryLoading) {
-        loader();
-      }
-    };
+    let columns;
+
+    if (isMobile) {
+        columns = new Array(2);
+    } else {
+        columns = new Array(4);
+    }
+
+    const gallery = document.getElementById("gallery");
+    for (let i = 0; i < columns.length; i++) {
+        const col = document.createElement("div");
+        col.classList.add("column");
+        gallery.appendChild(col);
+        columns[i] = (imageNode) => window.requestAnimationFrame(() => col.appendChild(imageNode));
+    }
+
+    return columns
 };
 
 const clearGallery = function() {
-  const gal = document.getElementsByClassName("column");
-  if (gal.length) {
-    gal[0].remove();
-    clearGallery();
+  for (column of document.getElementsByClassName("column")) {
+    column.remove();
   }
   window.scrollTo(0, 0);
 };
@@ -192,20 +155,20 @@ const doFetch = function(endpoint) {
 // Photo page
 if (location.pathname == '/photo/') {
   document.addEventListener("DOMContentLoaded", async (event) => {
-    initilizeGallery(await doFetch('/list/photos'));
+    load(initilizeGallery(), await doFetch('/list/photos'));
   });
 // end photo
 
 // Painting page
 } else if (location.pathname == '/paint/') {
   document.addEventListener("DOMContentLoaded", async (event) => {
-    initilizeGallery(await doFetch('/list/all'));
     document.getElementById('gal-ctrl-input').addEventListener('change',
         async (event) => {
             clearGallery();
             const toLoad = '/list/' + event.target.value;
-            initilizeGallery(await doFetch(toLoad));
+            load(initilizeGallery(), await doFetch(toLoad));
         });
+    load(initilizeGallery(), await doFetch('/list/all'));
   });
 // end Painting
 
