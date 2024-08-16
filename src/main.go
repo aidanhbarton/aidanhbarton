@@ -103,21 +103,20 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 }
 
 func fetchDir(path string) []string {
-	var fileList []string
 	f, err := os.ReadDir(sitePath + "/" + path)
 	if err != nil {
 		log.Panicf("Error reading %s: %v", path, err)
 	}
 
-	for _, file := range f {
-		fileList = append(fileList, "/"+path+file.Name())
+	fileList := make([]string,len(f))
+	for i, file := range f {
+		fileList[i] = "/"+path+file.Name()
 	}
 
 	return fileList
 }
 
 func toJSON(sJson []string) []byte {
-	var bJson []byte
 	bJson, err := json.Marshal(sJson)
 	if err != nil {
 		log.Panicf("Fatal error initializing JSONs: %v", err)

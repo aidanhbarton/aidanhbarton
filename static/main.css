@@ -378,6 +378,10 @@ footer {
       position: relative;
       z-index: 11;
       pointer-events: all;
+      height: 100%;
+      width: 100%;
+      align-content: center;
+      text-align: center;
 
       & h1 {
         font-weight: normal;

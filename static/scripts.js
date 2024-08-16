@@ -11,11 +11,13 @@ if (sideBarCtrl) {
 // Galleries
 let galleryLoading = false;
 let loaderContinue = null;
+let scrollYSave = 0;
 
 // Zoom
 const hideZoom = function () {
   document.getElementById("zoomed-image-window").classList.remove("show");
   document.getElementById("gallery").classList.toggle('hidden');
+  window.scrollTo(0, scrollYSave);
   if (loaderContinue) {
     loaderContinue();
   }
@@ -23,6 +25,7 @@ const hideZoom = function () {
 
 const clickImage = function (img) {
   // set new img src
+  scrollYSave = window.scrollY;
   const is_showing = document.getElementById("zoomed-image");
   is_showing.src = "";
   window.requestAnimationFrame(() => {
