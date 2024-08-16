@@ -15,8 +15,8 @@ type prefetchData struct {
 }
 
 type pageData struct {
-	Nav     bool
-	Content string
+	Nav      bool
+	Content  string
 	Prefetch *[]prefetchData
 }
 
@@ -89,15 +89,18 @@ func handlerWrapper(fn func(http.ResponseWriter, *http.Request, *pageData)) http
 	validPath := regexp.MustCompile("^/($|(home|about|photo|paint)/?$)")
 	return func(w http.ResponseWriter, r *http.Request) {
 		addHeaders(w)
-		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
-		m := validPath.MatchString(r.URL.Path)
-		if !m {
-			http.NotFound(w, r)
-			return
-		}
+
 		p := new(pageData)
 		p.Nav = true
 		p.Prefetch = nil
+
+		log.Printf("\t%s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
+		m := validPath.MatchString(r.URL.Path)
+		if !m {
+			w.WriteHeader(http.StatusNotFound)
+			renderTmpl(w, "404.html", p)
+			return
+		}
 		fn(w, r, p)
 	}
 }
@@ -108,9 +111,9 @@ func fetchDir(path string) []string {
 		log.Panicf("Error reading %s: %v", path, err)
 	}
 
-	fileList := make([]string,len(f))
+	fileList := make([]string, len(f))
 	for i, file := range f {
-		fileList[i] = "/"+path+file.Name()
+		fileList[i] = "/" + path + file.Name()
 	}
 
 	return fileList
@@ -205,7 +208,7 @@ func main() {
 
 	http.HandleFunc("/list/", buildListHandler())
 
-	port := ":5050"
+	port := ":5000"
 	log.Printf("\tServing at 127.0.0.1" + port)
 	log.Fatal(http.ListenAndServeTLS(port, "cert/fullchain.pem", "cert/privkey.pem", nil))
 }
