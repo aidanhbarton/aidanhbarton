@@ -72,7 +72,7 @@ const populateGallery = function (nodeIndex, nodeQueue, columns) {
 
     if (document.getElementById('gallery').classList.contains('hidden')) {
       // pause
-      loaderContinue = () => populateGallery(nodeIndex, nodeQueue);
+      loaderContinue = () => populateGallery(nodeIndex, nodeQueue, columns);
       return
     }
     if (!nodeQueue[nodeIndex].lastChild.lastChild.complete) {
@@ -84,7 +84,7 @@ const populateGallery = function (nodeIndex, nodeQueue, columns) {
     columns[findShortestColumn()](nodeQueue[nodeIndex]);
 
     nodeIndex++;
-    setTimeout(() => populateGallery(nodeIndex, nodeQueue, columns), 50);
+    setTimeout(() => populateGallery(nodeIndex, nodeQueue, columns), 25);
 };
 
 const nodify = function(imagePaths) {
@@ -133,8 +133,9 @@ const initilizeGallery = function(images) {
 };
 
 const clearGallery = function() {
-  for (column of document.getElementsByClassName("column")) {
-    column.remove();
+  const columns = document.getElementsByClassName("column");
+  while (columns.length) {
+    columns[0].remove();
   }
   window.scrollTo(0, 0);
 };
