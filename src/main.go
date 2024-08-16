@@ -208,7 +208,7 @@ func main() {
 
 	http.HandleFunc("/list/", buildListHandler())
 
-	port := ":5050"
+	port := ":5000"
 	log.Printf("\tServing at 127.0.0.1" + port)
 	log.Fatal(http.ListenAndServeTLS(port, "cert/fullchain.pem", "cert/privkey.pem", nil))
 }

@@ -16,5 +16,5 @@ WORKDIR "$APP_HOME"
 COPY tmpls tmpls
 COPY --from=builder "$APP_HOME"/ahbsite $APP_HOME
 
-EXPOSE 5050
+EXPOSE 5000
 CMD ./ahbsite "$APP_HOME"

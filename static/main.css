@@ -8,6 +8,12 @@
   src: url(/static/files/fonts/EBGaramond-Regular.ttf);
   font-display: fallback;
 }
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  src: url(/static/files/fonts/EBGaramond-Italic.ttf);
+  font-display: fallback;
+}
 
 :root {
   --white: #fdfaf0;
