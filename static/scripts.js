@@ -75,11 +75,6 @@ const populateGallery = function (nodeIndex, nodeQueue, columns) {
       loaderContinue = () => populateGallery(nodeIndex, nodeQueue, columns);
       return
     }
-    if (!nodeQueue[nodeIndex].lastChild.lastChild.complete) {
-      nodeQueue[nodeIndex].lastChild.lastChild.addEventListener("load",
-        () => populateGallery(nodeIndex, nodeQueue, columns));
-      return
-    }
 
     columns[findShortestColumn()](nodeQueue[nodeIndex]);
 
@@ -87,8 +82,20 @@ const populateGallery = function (nodeIndex, nodeQueue, columns) {
     setTimeout(() => populateGallery(nodeIndex, nodeQueue, columns), 25);
 };
 
-const nodify = function(imagePaths) {
+const waitForLoad = function (nodesLoaded, nodeQueue, columns) {
+
+    if (nodesLoaded[0] < nodeQueue.length) {
+        setTimeout(() => waitForLoad(nodesLoaded, nodeQueue, columns), 50);
+        return 0;
+    }
+
+    document.getElementById("loader").remove();
+    populateGallery(0, nodeQueue, columns);
+};
+
+const nodify = function(imagePaths, nodesLoaded) {
   const img = document.createElement("img");
+  img.addEventListener('load', () => nodesLoaded[0]++);
   img.src = imagePaths[0]; // small version
 
   const div = document.createElement("a");
@@ -104,12 +111,14 @@ const nodify = function(imagePaths) {
 
 const load = function(columns, imagePaths) {
   const nodeQueue = new Array(imagePaths.length/2);
+  const nodesLoaded = new Array(1);
+  nodesLoaded[0] = 0;
 
   for (let i = 0; i < imagePaths.length; i += 2) {
-    nodeQueue[i/2] = nodify([imagePaths[i], imagePaths[i+1]]);
+    nodeQueue[i/2] = nodify([imagePaths[i], imagePaths[i+1]], nodesLoaded);
   }
 
-  populateGallery(0, nodeQueue, columns);
+  waitForLoad(nodesLoaded, nodeQueue, columns);
 };
 
 const initilizeGallery = function(images) {

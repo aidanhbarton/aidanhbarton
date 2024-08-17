@@ -16,13 +16,10 @@
 }
 
 :root {
-  --white: #fdfaf0;
-  --black: #36334d;
+  --white: #ffe9e9;
+  --black: #2d0620;
   --red: #962a18;
-  --dark-gray: #8c8a85;
-  --light-gray: #e5e3dc;
-  --yellow: #ffc600;
-  --blue: #648295;
+  --light-gray: #ded0d0;
 
   --unit: 10px;
   --doubled-unit: calc(var(--unit) * 2);
@@ -181,8 +178,9 @@ footer {
   position: fixed;
   top: 0px;
   left: 0px;
-  background: var(--light-gray);
+  background: var(--white);
   color: var(--black);
+  border-right: 2px dashed var(--light-gray);
 
   & .side-bar-content {
     display: flex;
@@ -778,6 +776,37 @@ footer {
     }
 }
 
+#loader {
+  width: 75px;
+  aspect-ratio: 1;
+  display: grid;
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+}
+#loader:before,
+#loader:after {
+  content: "";
+  grid-area: 1/1;
+  width: 35px;
+  aspect-ratio: 1;
+  box-shadow: 0 0 0 3px var(--red) inset;
+  filter: drop-shadow(40px 40px 0 var(--red));
+  animation: l8 2s infinite alternate;
+}
+#loader:after {
+  margin: 0 0 0 auto;
+  filter: drop-shadow(-40px 40px 0 var(--red));
+  animation-delay: -1s;
+}
+@keyframes l8 {
+  0%,10%   {border-radius:0}
+  30%,40%  {border-radius:50% 0}
+  60%,70%  {border-radius:50%}
+  90%,100% {border-radius:0 50%}
+}
+
 /* Responsive */
 @media only screen and (max-width: 1000px) {
   /* About */
@@ -817,7 +846,7 @@ footer {
     margin-right: var(--doubled-unit);
     margin-left: var(--doubled-unit);
     padding: 0;
-    padding-top: calc(var(--display-margins));
+    padding-top: calc(var(--unit) + var(--display-margins));
   }
 
   main:has(#gallery-ctrl) > footer{
@@ -831,21 +860,19 @@ footer {
   /* Sidebar */
 
   .side-bar {
-    background: var(--red);
-    color: var(--white);
     height: max-content;
     flex-direction: column;
     width: 100%;
     transition: color 0.4s cubic-bezier(0.3, 0.2, 0.2, 1.4);
+    border-right: 0;
 
     &.opened {
-      background: var(--light-gray);
       color: var(--black);
 
       & .side-bar-content {
         height: calc(100dvh - var(--display-margins));
         width: 100%;
-        border-bottom: 2px dashed var(--dark-gray);
+        border-bottom: 2px dashed var(--light-gray);
       }
 
       & #side-bar-control {
@@ -894,6 +921,7 @@ footer {
       height: var(--display-margins);
       padding: 0;
       position: relative;
+      border-bottom: 2px dashed var(--light-gray);
 
       & div {
         all: unset;
@@ -904,7 +932,6 @@ footer {
           content: '\039E';
           font-family: sans-serif;
           font-size: x-large;
-          color: var(--white);
           margin: auto;
           position: absolute;
           right: calc(8*var(--unit));
