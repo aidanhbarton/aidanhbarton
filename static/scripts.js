@@ -82,46 +82,12 @@ const populateGallery = function (nodeIndex, nodeQueue, columns) {
     setTimeout(() => populateGallery(nodeIndex, nodeQueue, columns), 25);
 };
 
-const waitForLoad = function (nodesLoaded, nodeQueue, columns) {
-
-    if (nodesLoaded[0] < nodeQueue.length) {
-        setTimeout(() => waitForLoad(nodesLoaded, nodeQueue, columns), 50);
-        return 0;
+const initilizeGallery = function() {
+    const loader = document.getElementById("loader")
+    if (loader) { 
+      loader.remove();
     }
 
-    document.getElementById("loader").remove();
-    populateGallery(0, nodeQueue, columns);
-};
-
-const nodify = function(imagePaths, nodesLoaded) {
-  const img = document.createElement("img");
-  img.addEventListener('load', () => nodesLoaded[0]++);
-  img.src = imagePaths[0]; // small version
-
-  const div = document.createElement("a");
-  div.addEventListener("click", () => { clickImage(imagePaths[1]); });
-  div.appendChild(img);
-
-  const image = document.createElement("div")
-  image.classList.add("image");
-  image.appendChild(div);
-
-  return image;
-};
-
-const load = function(columns, imagePaths) {
-  const nodeQueue = new Array(imagePaths.length/2);
-  const nodesLoaded = new Array(1);
-  nodesLoaded[0] = 0;
-
-  for (let i = 0; i < imagePaths.length; i += 2) {
-    nodeQueue[i/2] = nodify([imagePaths[i], imagePaths[i+1]], nodesLoaded);
-  }
-
-  waitForLoad(nodesLoaded, nodeQueue, columns);
-};
-
-const initilizeGallery = function(images) {
     let columns;
 
     if (isMobile) {
@@ -139,6 +105,38 @@ const initilizeGallery = function(images) {
     }
 
     return columns
+};
+
+const nodify = function(imagePaths, nodesLoaded, nodeQueue) {
+  const img = document.createElement("img");
+  img.addEventListener('load', () => {
+    nodesLoaded[0]++;
+    if (nodesLoaded[0] >= nodeQueue.length) {
+        populateGallery(0, nodeQueue, initilizeGallery());
+    }
+  });
+
+  const div = document.createElement("a");
+  div.addEventListener("click", () => { clickImage(imagePaths[1]); });
+  div.appendChild(img);
+
+  const image = document.createElement("div")
+  image.classList.add("image");
+  image.appendChild(div);
+
+  img.src = imagePaths[0]; // small version
+  return image;
+};
+
+const load = function(imagePaths) {
+  const nodeQueue = new Array(imagePaths.length/2);
+  const nodesLoaded = new Array(1);
+  nodesLoaded[0] = 0;
+
+  for (let i = 0; i < imagePaths.length; i += 2) {
+    nodeQueue[i/2] = nodify([imagePaths[i], imagePaths[i+1]], nodesLoaded, nodeQueue);
+  }
+
 };
 
 const clearGallery = function() {
@@ -165,7 +163,7 @@ const doFetch = function(endpoint) {
 // Photo page
 if (location.pathname == '/photo/') {
   document.addEventListener("DOMContentLoaded", async (event) => {
-    load(initilizeGallery(), await doFetch('/list/photos'));
+    load(await doFetch('/list/photos'));
   });
 // end photo
 
@@ -176,9 +174,9 @@ if (location.pathname == '/photo/') {
         async (event) => {
             clearGallery();
             const toLoad = '/list/' + event.target.value;
-            load(initilizeGallery(), await doFetch(toLoad));
+            load(await doFetch(toLoad));
         });
-    load(initilizeGallery(), await doFetch('/list/all'));
+    load(await doFetch('/list/all'));
   });
 // end Painting
 

@@ -16,8 +16,9 @@
 }
 
 :root {
-  --white: #ffe9e9;
-  --black: #2d0620;
+  --white: #fff;
+  --cream: #fffcef;
+  --black: #163037;
   --red: #962a18;
   --light-gray: #ded0d0;
 
@@ -178,8 +179,7 @@ footer {
   position: fixed;
   top: 0px;
   left: 0px;
-  background: var(--white);
-  color: var(--black);
+  background: var(--cream);
   border-right: 2px dashed var(--light-gray);
 
   & .side-bar-content {
@@ -445,35 +445,6 @@ footer {
         left: 0;
       }
     }
-    & a {
-      position: relative;
-      margin: 0;
-      margin-top: var(--doubled-unit);
-      margin-bottom: var(--doubled-unit);
-      width: calc(80% - var(--doubled-unit));
-      max-width: 300px;
-      height: 100px;
-
-      border: 2px dashed var(--light-gray);
-      border-radius: 0px 40px 40px 0px;
-
-      &:hover {
-        border-color: var(--red);
-        background: var(--red);
-        color: var(--white);
-      }
-
-      & p {
-        position: absolute;
-        width: fit-content;
-        height: fit-content;
-        margin: auto;
-        top: 0px;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-      }
-    }
   }
 
   & div#about {
@@ -539,6 +510,26 @@ footer {
 
       & p + p {
         margin-top: var(--doubled-unit);
+      }
+    }
+
+    & a {
+      position: relative;
+      top: calc(48px + var(--doubled-unit));
+      width: 100%;
+
+      border: 2px dashed var(--light-gray);
+      border-radius: 20px 0px 20px 0px;
+      margin-bottom: var(--doubled-unit);
+
+      &:hover {
+        border-color: var(--red);
+        background: var(--red);
+        color: var(--white);
+      }
+
+      & p {
+        text-align: center;
       }
     }
   }
@@ -683,7 +674,7 @@ footer {
   z-index: 100;
   background: var(--red);
   color: var(--white);
-  border-radius: 0 25px 25px 0;
+  border-radius: 25px 25px 25px 25px;
   animation: 0.5s cubic-bezier(0.0, 0.0, 0.75, 1) 0s 1 slide-in;
 
   & label {
@@ -865,14 +856,14 @@ footer {
     width: 100%;
     transition: color 0.4s cubic-bezier(0.3, 0.2, 0.2, 1.4);
     border-right: 0;
+    border-bottom: 2px dashed var(--light-gray);
 
     &.opened {
-      color: var(--black);
 
       & .side-bar-content {
         height: calc(100dvh - var(--display-margins));
         width: 100%;
-        border-bottom: 2px dashed var(--light-gray);
+        border-bottom: 2px dashed var(--red);
       }
 
       & #side-bar-control {
@@ -881,7 +872,6 @@ footer {
 
           &::after {
             content: "- - -";
-            color: var(--red);
             font-weight: bold;
           }
         }
@@ -921,7 +911,7 @@ footer {
       height: var(--display-margins);
       padding: 0;
       position: relative;
-      border-bottom: 2px dashed var(--light-gray);
+      color: var(--red);
 
       & div {
         all: unset;
