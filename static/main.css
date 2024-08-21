@@ -16,9 +16,9 @@
 }
 
 :root {
-  --white: #fff;
+  --white: #fffcef;
   --cream: #fffcef;
-  --black: #163037;
+  --black: #071a1e;
   --red: #962a18;
   --light-gray: #ded0d0;
 
@@ -963,5 +963,35 @@ footer {
     width: calc(100% - (2*var(--doubled-unit)));
     padding-top: var(--display-margin);
     padding-bottom: var(--display-margin);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        scrollbar-color: var(--red) var(--black);
+        --light-gray: var(--red);
+    }
+
+    body {
+      padding: 0px;
+      margin: 0px;
+      font-family: 'EB Garamond';
+      color: var(--white);
+      background: var(--black);
+      width: 100%;
+    }
+
+    .side-bar {
+        background: var(--black);
+        color: var(--white);
+    }
+    .page-hsplit {
+        & .level-wrapper {
+            border-color: var(--black);
+        }
+    }
+
+  .about div#about .tab.selected {
+    background: var(--black);
   }
 }
