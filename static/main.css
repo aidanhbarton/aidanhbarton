@@ -994,4 +994,8 @@ footer {
   .about div#about .tab.selected {
     background: var(--black);
   }
+
+  .image-zoom {
+    background: var(--black);
+  }
 }
